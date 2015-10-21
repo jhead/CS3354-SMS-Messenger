@@ -1,22 +1,24 @@
-package group10.cs3354.sms_messenger;
+package cs3354group10.messenger.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class ThreadViewActivity extends Activity {
+import group10.cs3354.sms_messenger.R;
+
+public class EditMessageActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_thread_view);
+        setContentView(R.layout.activity_edit_message);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_thread_view, menu);
+        getMenuInflater().inflate(R.menu.menu_edit_message, menu);
         return true;
     }
 

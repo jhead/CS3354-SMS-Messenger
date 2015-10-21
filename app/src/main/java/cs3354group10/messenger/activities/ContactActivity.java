@@ -1,9 +1,11 @@
-package group10.cs3354.sms_messenger;
+package cs3354group10.messenger.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import group10.cs3354.sms_messenger.R;
 
 public class ContactActivity extends Activity {
 

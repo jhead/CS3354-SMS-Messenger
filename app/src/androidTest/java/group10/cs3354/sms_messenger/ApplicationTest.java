@@ -1,4 +1,4 @@
-package group10.cs3354.sms_messenger;
+package cs3354group10.messenger;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
