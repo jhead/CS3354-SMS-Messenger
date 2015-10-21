@@ -3,7 +3,14 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_edit_message">EditMessageActivity</string>
+
     <string name="title_activity_thread_view">ThreadViewActivity</string>
     <string name="title_activity_thread_list">ThreadListActivity</string>
+
+
+    <!--Edit message Activity -->
+    <string name="title_activity_edit_message">Edit Message</string>
+    <string name="message_hint">Edit Message</string>
+    <string name="send">SEND</string>
+    <string name="sendto_hint">Recipient</string>
 </resources>
