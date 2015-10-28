@@ -1,18 +1,90 @@
 package cs3354group10.messenger.activities;
 
-import android.app.Activity;
+import android.app.ListActivity;
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CursorAdapter;
+import android.widget.SimpleCursorAdapter;
 
+import java.util.Collection;
+import java.util.HashMap;
+
+import cs3354group10.messenger.Contact;
+import cs3354group10.messenger.Message;
+import cs3354group10.messenger.MessageState;
+import cs3354group10.messenger.db.MessageDatabase;
+import cs3354group10.messenger.db.MessageDatabaseHelper;
 import group10.cs3354.sms_messenger.R;
 
-public class ThreadListActivity extends Activity {
+public class ThreadListActivity extends ListActivity {
+
+    private static final HashMap<String, Integer> listValueMap = new HashMap<>();
+    static {
+        listValueMap.put(Message.DB_COLUMN_NAME_CONTACT, R.id.threadListItemContactName);
+        listValueMap.put(Message.DB_COLUMN_NAME_TEXT, R.id.threadListItemMessage);
+    };
+
+    private SimpleCursorAdapter listAdapter;
+
+    private static CursorAdapter createCursorAdapter(ThreadListActivity activity, int listItemLayout, Cursor cursor, int flags) {
+        Collection<String> keys = listValueMap.keySet();
+
+        Collection<Integer> values = listValueMap.values();
+        Integer[] integerValues = (Integer[]) values.toArray(new Integer[values.size()]);
+
+        int[] to = new int[integerValues.length];
+        for (int i = 0; i < integerValues.length; i++) {
+            to[i] = integerValues[i].intValue();
+        }
+
+        String[] from = (String[]) keys.toArray(new String[keys.size()]);
+
+        return new SimpleCursorAdapter(
+                activity,
+                listItemLayout,
+                cursor,
+                from,
+                to,
+                flags
+        );
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thread_list);
+
+        this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
+
+        /*** DEBUG: Insert test data into database ***/
+        Contact contactJustin = new Contact("Justin Head");
+        Contact contactSatsuki = new Contact("Satsuki Ueno");
+        Contact contactCristian = new Contact("Cristian Ventura");
+
+        // Display order may differ since the timestamps will probably be identical
+        Message messageOne = new Message(contactJustin, "Message #1 from Justin", MessageState.RECV);
+        Message messageTwo = new Message(contactSatsuki, "Hello, world!", MessageState.RECV);
+        Message messageThree = new Message(contactCristian, "Test 1234", MessageState.RECV);
+        Message messageOneTwo = new Message(contactJustin, "Message #2 from Justin", MessageState.RECV);
+
+        MessageDatabase.insertMessage(this, messageOne);
+        MessageDatabase.insertMessage(this, messageThree);
+        MessageDatabase.insertMessage(this, messageOneTwo);
+        MessageDatabase.insertMessage(this, messageTwo);
+        /*** DEBUG ***/
+
+        loadThreads();
+    }
+
+    protected void loadThreads() {
+        Context context = getApplicationContext();
+        Cursor threadListCursor = MessageDatabase.queryThreads(context);
+
+        listAdapter = (SimpleCursorAdapter) createCursorAdapter(this, R.layout.thread_list_item, threadListCursor, 0);
+        setListAdapter(listAdapter);
     }
 
     @Override
