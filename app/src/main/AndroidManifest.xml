@@ -14,11 +14,6 @@
         <activity
             android:name="cs3354group10.messenger.activities.ContactActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="cs3354group10.messenger.activities.EditMessageActivity"
@@ -31,6 +26,10 @@
         <activity
             android:name="cs3354group10.messenger.activities.ThreadListActivity"
             android:label="@string/title_activity_thread_list" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <receiver
