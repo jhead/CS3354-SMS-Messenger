@@ -2,8 +2,11 @@ package cs3354group10.messenger.activities;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +27,8 @@ import cs3354group10.messenger.db.MessageDatabaseHelper;
 import group10.cs3354.sms_messenger.R;
 
 public class ThreadListActivity extends ListActivity {
+
+    public final static String THREAD_CONTACT = "Contact name will be stored here by intent";
 
     private static final HashMap<String, Integer> listValueMap = new HashMap<>();
     static {
@@ -56,6 +61,7 @@ public class ThreadListActivity extends ListActivity {
         );
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,15 +88,14 @@ public class ThreadListActivity extends ListActivity {
 
         loadThreads();
 
-        final ListView threadList = (ListView) findViewById(R.id.list);
+        /*final ListView threadList = (ListView) findViewById(android.R.id.list);
 
         threadList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object selectedItem = threadList.getItemAtPosition(position);
-                
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)   {
+                Cursor mCurser = threadList.getItemIdAtPosition(position);
             }
-        });
+        });*/
 
     }
 
@@ -122,5 +127,24 @@ public class ThreadListActivity extends ListActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /*
+    Listener to go to the thread that is clicked by the user
+     */
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        Cursor cursor = listAdapter.getCursor();
+        cursor.moveToPosition(position);
+
+        //Get the name of the contact that we clicked on
+        String contactName = cursor.getString(cursor.getColumnIndex("contact"));
+        Log.d("mes", contactName);
+
+        Intent intent = new Intent(this, EditMessageActivity.class);
+        intent.putExtra(THREAD_CONTACT, contactName);
+        startActivity(intent);
     }
 }
