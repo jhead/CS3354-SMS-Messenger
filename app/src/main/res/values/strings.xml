@@ -6,8 +6,6 @@
 
     <string name="title_activity_thread_view">ThreadViewActivity</string>
 
-    <string name="title_activity_thread_list">ThreadListActivity</string>
-
 
     <!--Edit message Activity -->
     <string name="title_activity_edit_message">Edit Message</string>
@@ -15,6 +13,7 @@
     <string name="send">SEND</string>
     <string name="sendto_hint">Recipient</string>
 
+    <!--Thread List Activity -->
     <string name="title_activity_thread_list">Messages</string>
 
 </resources>
