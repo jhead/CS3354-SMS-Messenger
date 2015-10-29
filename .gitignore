@@ -20,3 +20,6 @@ build/
 .idea/gradle.xml
 .idea/libraries
 .idea/mongoSettings.xml
+.idea/misc.xml
+.idea/vcs.xml
+.idea/encodings.xml
