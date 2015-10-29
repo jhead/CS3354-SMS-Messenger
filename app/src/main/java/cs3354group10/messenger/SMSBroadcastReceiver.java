@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
+import cs3354group10.messenger.db.MessageDatabase;
 
 public class SMSBroadcastReceiver extends BroadcastReceiver {
     public SMSBroadcastReceiver() {
@@ -23,6 +24,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
         Bundle b = intent.getExtras();
         Object[] sms = (Object[]) b.get("pdus");
 
+        //catch when broadcast is not SMS
         if (sms == null)
             return;
 
@@ -32,8 +34,16 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
             String body = message.getMessageBody();
             String sender = message.getOriginatingAddress();
             String str = "Sender: " + sender + "\n\n" + body;
+
+            //temporary message display
             Toast t = Toast.makeText(context, str, Toast.LENGTH_SHORT);
             t.show();
+
+            //TODO - need to find contact in contact list, if not available then do this
+            Contact c = new Contact(sender);
+
+            //stick message in database
+            MessageDatabase.insertMessage(context,new Message(c,body,MessageState.RECV));
         }
     }
 }

@@ -1,6 +1,8 @@
 package cs3354group10.messenger.activities;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.Menu;
@@ -9,8 +11,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import cs3354group10.messenger.Contact;
+import cs3354group10.messenger.Message;
+import cs3354group10.messenger.MessageState;
+import cs3354group10.messenger.db.MessageDatabase;
+
 import group10.cs3354.sms_messenger.R;
 
+
+/**
+ * EditMessageActivity
+ * Probably either replaced entirely by ThreadViewActivity to allow sending and viewing messages at same time,
+ * or add similar functionality to ThreadViewActivity.
+ * In that case, use this for composing messages not yet part of a thread.
+ */
 public class EditMessageActivity extends Activity {
 
     @Override
@@ -52,8 +66,17 @@ public class EditMessageActivity extends Activity {
         String address = ((EditText) findViewById(R.id.id_phone_field)).getText().toString();
 
         SmsManager manager = SmsManager.getDefault();
-        manager.sendTextMessage(address,null,message,null,null);
+        manager.sendTextMessage(address, null, message, null, null);
 
-        //TODO: probably switch activity or something, save to database, etc
-    }
+        //TODO: check if contact in database and use that contact if it is
+        Contact c = new Contact(address);
+
+        //stick in database
+        MessageDatabase.insertMessage(this, new Message(c, message, MessageState.SENT));
+
+        //TODO: probably switch activity elsewhere
+        //TODO: probably add confirmation for received messages
+        Intent i = new Intent(this,ThreadListActivity.class);
+        startActivity(i);
+        }
 }
