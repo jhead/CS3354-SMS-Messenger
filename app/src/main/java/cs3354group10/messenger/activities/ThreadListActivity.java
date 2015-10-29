@@ -88,6 +88,7 @@ public class ThreadListActivity extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object selectedItem = threadList.getItemAtPosition(position);
+                
             }
         });
 
