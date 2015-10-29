@@ -6,8 +6,12 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -77,6 +81,16 @@ public class ThreadListActivity extends ListActivity {
         /*** DEBUG ***/
 
         loadThreads();
+
+        final ListView threadList = (ListView) findViewById(R.id.list);
+
+        threadList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object selectedItem = threadList.getItemAtPosition(position);
+            }
+        });
+
     }
 
     protected void loadThreads() {
