@@ -14,11 +14,6 @@ public class EditMessageActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_message);
-
-        Intent intent = getIntent();
-        String contact = intent.getStringExtra(ThreadListActivity.THREAD_CONTACT);
-
-        setTitle(contact); //Set the title of the activity to the person we are messaging
     }
 
     @Override
