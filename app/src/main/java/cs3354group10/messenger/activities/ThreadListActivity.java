@@ -88,15 +88,6 @@ public class ThreadListActivity extends ListActivity {
 
         loadThreads();
 
-        /*final ListView threadList = (ListView) findViewById(android.R.id.list);
-
-        threadList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)   {
-                Cursor mCurser = threadList.getItemIdAtPosition(position);
-            }
-        });*/
-
     }
 
     protected void loadThreads() {

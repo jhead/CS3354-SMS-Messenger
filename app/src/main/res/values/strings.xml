@@ -6,4 +6,7 @@
     <string name="title_activity_edit_message">EditMessageActivity</string>
     <string name="title_activity_thread_view">ThreadViewActivity</string>
     <string name="title_activity_thread_list">Messages</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

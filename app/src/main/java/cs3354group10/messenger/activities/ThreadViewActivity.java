@@ -1,14 +1,22 @@
 package cs3354group10.messenger.activities;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CursorAdapter;
+import android.widget.SimpleCursorAdapter;
 
+import java.util.Collection;
+import java.util.HashMap;
+
+import cs3354group10.messenger.Message;
+import cs3354group10.messenger.db.MessageDatabase;
 import group10.cs3354.sms_messenger.R;
 
-public class ThreadViewActivity extends Activity {
+public class ThreadViewActivity extends ListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
