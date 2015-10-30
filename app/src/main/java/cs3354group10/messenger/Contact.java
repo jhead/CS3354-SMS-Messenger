@@ -18,6 +18,4 @@ public class Contact {
     public String getName() {
         return this.name;
     }
-
-
 }

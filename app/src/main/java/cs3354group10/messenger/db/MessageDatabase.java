@@ -50,10 +50,11 @@ public class MessageDatabase {
 
         String selection = Message.DB_COLUMN_NAME_CONTACT + " = ?";
         String[] selectionArgs = new String[] { contact.getName() };
+        //String groupBy = Message.DB_COLUMN_NAME_CONTACT;
 
         String orderBy = Message.DB_COLUMN_NAME_TIMESTAMP + " ASC";
-
-        return db.query(Message.DB_TABLE_NAME, Message.DB_COLUMNS, selection, selectionArgs, null, orderBy, null);
+        return db.query(Message.DB_TABLE_NAME, Message.DB_COLUMNS, selection, selectionArgs, null, null, orderBy, null);
+        //return db.query(Message.DB_TABLE_NAME, Message.DB_COLUMNS, selection, null, groupBy, null, orderBy, null);
     }
 
 

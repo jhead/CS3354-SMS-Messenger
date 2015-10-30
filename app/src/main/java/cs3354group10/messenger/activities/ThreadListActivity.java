@@ -134,8 +134,10 @@ public class ThreadListActivity extends ListActivity {
         String contactName = cursor.getString(cursor.getColumnIndex("contact"));
         Log.d("mes", contactName);
 
+
         Intent intent = new Intent(this, ThreadViewActivity.class);
         intent.putExtra(THREAD_CONTACT, contactName);
         startActivity(intent);
     }
 }
+
