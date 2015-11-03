@@ -81,19 +81,19 @@ public class EditMessageActivity extends Activity {
 
     /**
      * onSendPressed
-     * sends the message
+     * sends the message, multiple contacts indicated by splitting with ';'
      * @param view Not used
-     * TODO: need to add way for multiple contacts, send by contact and not phone number
      */
     public void onSendPressed(View view){
         String message = ((EditText) findViewById(R.id.id_message_field)).getText().toString();
-        String address = ((EditText) findViewById(R.id.id_phone_field)).getText().toString();
+        String address [] = ((EditText) findViewById(R.id.id_phone_field)).getText().toString().split(";");
 
         SmsManager manager = SmsManager.getDefault();
-        manager.sendTextMessage(address, null, message, null, null);
+        for (String a : address)
+            manager.sendTextMessage(a, null, message, null, null);
 
         //TODO: check if contact in database and use that contact if it is
-        Contact c = new Contact(address);
+        Contact c = new Contact(address[0]);
 
         //stick in database
         MessageDatabase.insertMessage(getApplicationContext(), new Message(c, message, MessageState.SENT));
