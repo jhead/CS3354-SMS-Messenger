@@ -27,10 +27,34 @@ import group10.cs3354.sms_messenger.R;
  */
 public class EditMessageActivity extends Activity {
 
+    public static EditMessageActivity activityInstance = null;
+    private static boolean active = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_message);
+
+        activityInstance = this;
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        active = true;
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        active = false;
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        active = false;
+        activityInstance = null;
     }
 
     @Override
@@ -59,7 +83,7 @@ public class EditMessageActivity extends Activity {
      * onSendPressed
      * sends the message
      * @param view Not used
-     * TODO: need to add way for multiple contacts, send by ontact and not phone number
+     * TODO: need to add way for multiple contacts, send by contact and not phone number
      */
     public void onSendPressed(View view){
         String message = ((EditText) findViewById(R.id.id_message_field)).getText().toString();
@@ -72,11 +96,11 @@ public class EditMessageActivity extends Activity {
         Contact c = new Contact(address);
 
         //stick in database
-        MessageDatabase.insertMessage(this, new Message(c, message, MessageState.SENT));
+        MessageDatabase.insertMessage(getApplicationContext(), new Message(c, message, MessageState.SENT));
 
         //TODO: probably switch activity elsewhere
         //TODO: probably add confirmation for received messages
         Intent i = new Intent(this,ThreadListActivity.class);
         startActivity(i);
-        }
+    }
 }

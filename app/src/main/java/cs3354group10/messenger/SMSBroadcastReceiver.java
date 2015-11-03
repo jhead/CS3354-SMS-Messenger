@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
+
+import cs3354group10.messenger.activities.ThreadListActivity;
 import cs3354group10.messenger.db.MessageDatabase;
 
 public class SMSBroadcastReceiver extends BroadcastReceiver {
@@ -35,9 +37,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
             String sender = message.getOriginatingAddress();
             String str = "Sender: " + sender + "\n\n" + body;
 
-            //temporary message display
-            Toast t = Toast.makeText(context, str, Toast.LENGTH_SHORT);
-            t.show();
+            //send notifi
 
             //TODO - need to find contact in contact list, if not available then do this
             Contact c = new Contact(sender);
@@ -45,5 +45,6 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
             //stick message in database
             MessageDatabase.insertMessage(context,new Message(c,body,MessageState.RECV));
         }
+        ThreadListActivity.updateThreads();
     }
 }
