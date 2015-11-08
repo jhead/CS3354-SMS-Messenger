@@ -21,6 +21,8 @@ import group10.cs3354.sms_messenger.R;
 
 public class ThreadListActivity extends ListActivity {
 
+    // Key to query the extra data
+//    public final static String CONTACT = "cs3354group10.messenger.activities.CONTACT";
     private static boolean active = false;
     private static ThreadListActivity activityInstance;
 
