@@ -13,12 +13,14 @@
         android:layout_alignParentRight="true"
         android:onClick="onSendPressed"/>
 
-    <EditText
+    slack<EditText
         android:id="@+id/id_phone_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:hint="@string/sendto_hint"/>
+        android:hint="@string/sendto_hint"
+        android:layout_toStartOf="@+id/addContactButton"
+    android:layout_toLeftOf="@+id/addContactButton" />
 
     <EditText
         android:id="@+id/id_message_field"
@@ -28,6 +30,25 @@
         android:layout_above = "@id/id_send_button"
         android:layout_below = "@id/id_phone_field"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:id="@+id/cancelButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClickCancel" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contacts"
+        android:id="@+id/addContactButton"
+        android:onClick="doLaunchContactPicker"
+        android:layout_above="@+id/id_message_field"
+        android:layout_alignRight="@+id/id_message_field"
+        android:layout_alignEnd="@+id/id_message_field" />
 
 
 </RelativeLayout>

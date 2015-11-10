@@ -2,12 +2,17 @@ package cs3354group10.messenger.activities;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.SimpleCursorAdapter;
+
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,16 +24,20 @@ import cs3354group10.messenger.db.MessageDatabase;
 import cs3354group10.messenger.db.MessageDatabaseHelper;
 import group10.cs3354.sms_messenger.R;
 
+
 public class ThreadListActivity extends ListActivity {
 
     private static boolean active = false;
     private static ThreadListActivity activityInstance;
 
     private static final HashMap<String, Integer> listValueMap = new HashMap<>();
+
     static {
         listValueMap.put(Message.DB_COLUMN_NAME_CONTACT, R.id.threadListItemContactName);
         listValueMap.put(Message.DB_COLUMN_NAME_TEXT, R.id.threadListItemMessage);
-    };
+    }
+
+    ;
 
     private SimpleCursorAdapter listAdapter;
 
@@ -62,10 +71,10 @@ public class ThreadListActivity extends ListActivity {
 
         activityInstance = this;
 
-        this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
+        //this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
 
         /*** DEBUG: Insert test data into database ***/
-        Contact contactJustin = new Contact("Justin Head");
+       /* Contact contactJustin = new Contact("Justin Head");
         Contact contactSatsuki = new Contact("Satsuki Ueno");
         Contact contactCristian = new Contact("Cristian Ventura");
 
@@ -87,7 +96,7 @@ public class ThreadListActivity extends ListActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         activityInstance = null;
         active = false;
@@ -124,13 +133,14 @@ public class ThreadListActivity extends ListActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         active = true;
     }
 
+
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         active = false;
     }
@@ -139,8 +149,19 @@ public class ThreadListActivity extends ListActivity {
      * updateThreads
      * called by SMSBroadcastReceiver on receiving a message to refresh display
      */
-    public static void updateThreads(){
+    public static void updateThreads() {
         if (active)
             activityInstance.loadThreads();
     }
+
+
+   public void onClick(View v){
+       startActivity(new Intent( cs3354group10.messenger.activities.ThreadListActivity.this , cs3354group10.messenger.activities.EditMessageActivity.class ));
+   }
+
 }
+
+
+
+
+
