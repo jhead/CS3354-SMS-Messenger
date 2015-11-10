@@ -2,8 +2,10 @@ package cs3354group10.messenger.activities;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListAdapter;
@@ -27,6 +29,12 @@ public class ThreadViewActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thread_view);
 
+        Intent intent = getIntent();
+        //String contactName = intent.getStringExtra(ThreadListActivity.THREAD_CONTACT);
+        //Log.d("name", contactName);
+        //Contact contact = findContact(intent.getStringExtra(ThreadListActivity.THREAD_CONTACT));
+
+
         this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
         // TODO: Get the contact's name from ThreadListActivity after clicking a thread (?)
 //        String contact = getIntent().getStringExtra(ThreadListActivity.CONTACT);
@@ -49,9 +57,21 @@ public class ThreadViewActivity extends ListActivity {
         MessageDatabase.insertMessage(context, messageOneTwo);
         MessageDatabase.insertMessage(context, messageTwo);
 
-        String contact = contactJustin.getName();
+        //String contact = contactJustin.getName();
+        Contact contact = findContact(intent.getStringExtra(ThreadListActivity.THREAD_CONTACT));
+        setTitle(contact.getName());
         /*** DEBUG ***/
-        loadMessages(contact);
+        loadMessages(contact.getName());
+    }
+
+    private Contact findContact(String name){
+        for(Contact contact : Contact.contactList){
+            if (contact.getName().equals(name)){
+                return contact;
+            }
+            Log.d("Cont", contact.getName());
+        }
+        return new Contact("IM BROKEN");
     }
 
     protected void loadMessages(String contact) {
