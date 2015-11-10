@@ -76,27 +76,6 @@ public class ThreadListActivity extends ListActivity {
 
         activityInstance = this;
 
-        //this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
-
-        /*** DEBUG: Insert test data into database ***/
-        Contact contactJustin = new Contact("Justin Head");
-        Contact contactSatsuki = new Contact("Satsuki Ueno");
-        Contact contactCristian = new Contact("Cristian Ventura");
-
-        // Display order may differ since the timestamps will probably be identical
-        Message messageOne = new Message(contactJustin, "Message #1 from Justin", MessageState.RECV);
-        Message messageTwo = new Message(contactSatsuki, "Hello, world!", MessageState.RECV);
-        Message messageThree = new Message(contactCristian, "Test 1234", MessageState.RECV);
-        Message messageOneTwo = new Message(contactJustin, "Message #2 from Justin", MessageState.RECV);
-
-        Context context = getApplicationContext();
-
-        MessageDatabase.insertMessage(context, messageOne);
-        MessageDatabase.insertMessage(context, messageThree);
-        MessageDatabase.insertMessage(context, messageOneTwo);
-        MessageDatabase.insertMessage(context, messageTwo);
-        /*** DEBUG ***/
-
         loadThreads();
     }
 

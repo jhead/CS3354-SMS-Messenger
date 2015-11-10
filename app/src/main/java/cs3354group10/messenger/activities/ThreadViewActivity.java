@@ -30,37 +30,8 @@ public class ThreadViewActivity extends ListActivity {
         setContentView(R.layout.activity_thread_view);
 
         Intent intent = getIntent();
-        //String contactName = intent.getStringExtra(ThreadListActivity.THREAD_CONTACT);
-        //Log.d("name", contactName);
-        //Contact contact = findContact(intent.getStringExtra(ThreadListActivity.THREAD_CONTACT));
-
-
-        this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
-        // TODO: Get the contact's name from ThreadListActivity after clicking a thread (?)
-//        String contact = getIntent().getStringExtra(ThreadListActivity.CONTACT);
-
-        /*** DEBUG: Insert test data into database ***/
-        Contact contactJustin = new Contact("Justin Head");
-        Contact contactSatsuki = new Contact("Satsuki Ueno");
-        Contact contactCristian = new Contact("Cristian Ventura");
-
-        // Display order may differ since the timestamps will probably be identical
-        Message messageOne = new Message(contactJustin, "Message #1 from Justin", MessageState.RECV);
-        Message messageTwo = new Message(contactSatsuki, "Hello, world!", MessageState.RECV);
-        Message messageThree = new Message(contactCristian, "Test 1234", MessageState.RECV);
-        Message messageOneTwo = new Message(contactJustin, "Message #2 from Justin", MessageState.RECV);
-
-        Context context = getApplicationContext();
-
-        MessageDatabase.insertMessage(context, messageOne);
-        MessageDatabase.insertMessage(context, messageThree);
-        MessageDatabase.insertMessage(context, messageOneTwo);
-        MessageDatabase.insertMessage(context, messageTwo);
-
-        //String contact = contactJustin.getName();
         Contact contact = findContact(intent.getStringExtra(ThreadListActivity.THREAD_CONTACT));
         setTitle(contact.getName());
-        /*** DEBUG ***/
         loadMessages(contact.getName());
     }
 
