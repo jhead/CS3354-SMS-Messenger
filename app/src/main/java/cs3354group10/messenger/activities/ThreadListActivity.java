@@ -5,10 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+<<<<<<< HEAD
 import android.widget.Button;
+=======
+import android.view.View;
+>>>>>>> namdinh-threadview
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import android.view.View;
@@ -27,6 +33,10 @@ import group10.cs3354.sms_messenger.R;
 
 public class ThreadListActivity extends ListActivity {
 
+
+    public final static String THREAD_CONTACT = "Contact name will be stored here by intent";
+    // Key to query the extra data
+//    public final static String CONTACT = "cs3354group10.messenger.activities.CONTACT";
     private static boolean active = false;
     private static ThreadListActivity activityInstance;
 
@@ -154,11 +164,30 @@ public class ThreadListActivity extends ListActivity {
             activityInstance.loadThreads();
     }
 
+<<<<<<< HEAD
 
    public void onClick(View v){
        startActivity(new Intent( cs3354group10.messenger.activities.ThreadListActivity.this , cs3354group10.messenger.activities.EditMessageActivity.class ));
    }
 
+=======
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        Cursor cursor = listAdapter.getCursor();
+        cursor.moveToPosition(position);
+
+        //Get the name of the contact that we clicked on
+        String contactName = cursor.getString(cursor.getColumnIndex("contact"));
+        Log.d("mes", contactName);
+
+
+        Intent intent = new Intent(this, ThreadViewActivity.class);
+        intent.putExtra(THREAD_CONTACT, contactName);
+        startActivity(intent);
+    }
+>>>>>>> namdinh-threadview
 }
 
 

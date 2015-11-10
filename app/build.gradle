@@ -5,7 +5,11 @@ android {
     buildToolsVersion "22.0.1"
     defaultConfig {
         applicationId "group10.cs3354.sms_messenger"
+<<<<<<< HEAD
         minSdkVersion 14
+=======
+        minSdkVersion 19
+>>>>>>> namdinh-threadview
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
