@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import cs3354group10.messenger.Contact;
 import cs3354group10.messenger.Message;
 
 public class MessageDatabase {
@@ -45,15 +44,15 @@ public class MessageDatabase {
     * @param contact Messages between the user and this contact will be returned.
     * @return A cursor to iterate the list of messages.
     */
-    public static Cursor queryMessages(Context context, Contact contact) {
+    public static Cursor queryMessages(Context context, String contact) {
         SQLiteDatabase db = getReadableDatabase(context);
 
         String selection = Message.DB_COLUMN_NAME_CONTACT + " = ?";
-        String[] selectionArgs = new String[] { contact.getName() };
+        String[] selectionArgs = new String[] { contact };
 
         String orderBy = Message.DB_COLUMN_NAME_TIMESTAMP + " ASC";
 
-        return db.query(Message.DB_TABLE_NAME, Message.DB_COLUMNS, selection, selectionArgs, null, orderBy, null);
+        return db.query(Message.DB_TABLE_NAME, Message.DB_COLUMNS, selection, selectionArgs, null, null, orderBy);
     }
 
 
