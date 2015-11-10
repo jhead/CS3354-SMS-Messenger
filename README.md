@@ -1,1 +1,11 @@
-We can put stuff here once we start to keep track of what everybody is doing and our todo lists
+TODO 11/9/2015
+
+edit/send messages -- Satsuki
+
+save as draft -- Justin
+
+delete threads/messages -- Nam
+
+Search Messages -- Brendan
+
+Save a new number to the stock contacts app -- Christian
