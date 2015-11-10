@@ -4,12 +4,19 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import cs3354group10.messenger.Contact;
 import cs3354group10.messenger.Message;
@@ -23,46 +30,43 @@ public class ThreadViewActivity extends ListActivity {
     private ListAdapter listAdapter;
     private String[] fromColumn = {Message.DB_COLUMN_NAME_TEXT};
     private int[] toView = {R.id.threadViewItemMessage};
+    private Contact contact;
+    private static ThreadViewActivity instance = null;
+    private static boolean active = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         setContentView(R.layout.activity_thread_view);
 
         Intent intent = getIntent();
-        //String contactName = intent.getStringExtra(ThreadListActivity.THREAD_CONTACT);
-        //Log.d("name", contactName);
-        //Contact contact = findContact(intent.getStringExtra(ThreadListActivity.THREAD_CONTACT));
-
-
-        this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
-        // TODO: Get the contact's name from ThreadListActivity after clicking a thread (?)
-//        String contact = getIntent().getStringExtra(ThreadListActivity.CONTACT);
-
-        /*** DEBUG: Insert test data into database ***/
-        Contact contactJustin = new Contact("Justin Head");
-        Contact contactSatsuki = new Contact("Satsuki Ueno");
-        Contact contactCristian = new Contact("Cristian Ventura");
-
-        // Display order may differ since the timestamps will probably be identical
-        Message messageOne = new Message(contactJustin, "Message #1 from Justin", MessageState.RECV);
-        Message messageTwo = new Message(contactSatsuki, "Hello, world!", MessageState.RECV);
-        Message messageThree = new Message(contactCristian, "Test 1234", MessageState.RECV);
-        Message messageOneTwo = new Message(contactJustin, "Message #2 from Justin", MessageState.RECV);
-
-        Context context = getApplicationContext();
-
-        MessageDatabase.insertMessage(context, messageOne);
-        MessageDatabase.insertMessage(context, messageThree);
-        MessageDatabase.insertMessage(context, messageOneTwo);
-        MessageDatabase.insertMessage(context, messageTwo);
 
         //String contact = contactJustin.getName();
-        Contact contact = findContact(intent.getStringExtra(ThreadListActivity.THREAD_CONTACT));
+        contact = findContact(intent.getStringExtra(ThreadListActivity.THREAD_CONTACT));
         setTitle(contact.getName());
         /*** DEBUG ***/
         loadMessages(contact.getName());
     }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        active = false;
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        active = true;
+        loadMessages(contact.getName());
+    }
+
+    public static void updateMessages(){
+        if (active)
+            instance.loadMessages(instance.contact.getName());
+    }
+
 
     private Contact findContact(String name){
         for(Contact contact : Contact.contactList){
@@ -71,7 +75,7 @@ public class ThreadViewActivity extends ListActivity {
             }
             Log.d("Cont", contact.getName());
         }
-        return new Contact("IM BROKEN");
+        return new Contact(name);
     }
 
     protected void loadMessages(String contact) {
@@ -102,5 +106,67 @@ public class ThreadViewActivity extends ListActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onSendPressed(View view){
+        String message = ((EditText) findViewById(R.id.threadView_messageEditor)).getText().toString();
+
+        String address = getNumber(contact.getName());
+
+        if (address == null){
+            Toast t = Toast.makeText(this,"Error finding phone number for contact.",Toast.LENGTH_SHORT);
+            t.show();
+            return;
+        }
+
+        SmsManager manager = SmsManager.getDefault();
+        manager.sendTextMessage(address, null, message, null, null);
+
+        String recipient = contactExists(contact.getName());
+
+        //stick in database
+        MessageDatabase.insertMessage(getApplicationContext(), new Message(contact, message, MessageState.SENT));
+        loadMessages(contact.getName());
+
+        EditText e =(EditText) findViewById(R.id.threadView_messageEditor);
+        e.setText("", TextView.BufferType.EDITABLE);
+    }
+
+
+    private String contactExists( String number) {
+/// number is the phone number
+        Uri lookupUri = Uri.withAppendedPath(
+                ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                Uri.encode(number));
+        String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
+        Cursor cur = getContentResolver().query(lookupUri, mPhoneNumberProjection, null, null, null);
+        try {
+            if (cur.moveToFirst()) {
+                String FirstName =cur.getString(cur.getColumnIndexOrThrow(ContactsContract.PhoneLookup.DISPLAY_NAME));
+                //String LastName =cur.getString(cur.getColumnIndexOrThrow(ContactsContract.PhoneLookup.))
+                return FirstName;
+            }
+        } finally {
+            if (cur != null)
+                cur.close();
+        }
+        return number;
+    }
+
+    private String getNumber(String name){
+        //Uri lookup = Uri.withAppendedPath(
+          //      ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+            //    Uri.encode(name));
+        Cursor cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + "=?", new String[] { name }, null);
+        try {
+            if (cur.moveToFirst()) {
+                String number = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                return number;
+            }
+        } finally {
+            if (cur != null)
+                cur.close();
+        }
+        return null;
     }
 }

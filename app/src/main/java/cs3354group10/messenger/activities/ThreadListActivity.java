@@ -76,9 +76,9 @@ public class ThreadListActivity extends ListActivity {
 
         activityInstance = this;
 
-        //this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
+        /*this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
 
-        /*** DEBUG: Insert test data into database ***/
+
         Contact contactJustin = new Contact("Justin Head");
         Contact contactSatsuki = new Contact("Satsuki Ueno");
         Contact contactCristian = new Contact("Cristian Ventura");
@@ -179,6 +179,12 @@ public class ThreadListActivity extends ListActivity {
         Intent intent = new Intent(this, ThreadViewActivity.class);
         intent.putExtra(THREAD_CONTACT, contactName);
         startActivity(intent);
+    }
+
+
+    public void onClick(View view){
+        Intent i = new Intent(this, EditMessageActivity.class);
+        startActivity(i);
     }
 }
 

@@ -11,6 +11,7 @@ import android.telephony.SmsMessage;
 import android.widget.Toast;
 
 import cs3354group10.messenger.activities.ThreadListActivity;
+import cs3354group10.messenger.activities.ThreadViewActivity;
 import cs3354group10.messenger.db.MessageDatabase;
 
 public class SMSBroadcastReceiver extends BroadcastReceiver {
@@ -40,15 +41,14 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
             String sender = contactExists(message.getOriginatingAddress(),context);
             String str = "Sender: " + sender + "\n\n" + body;
 
-            //send notifi
 
-            //TODO - need to find contact in contact list, if not available then do this
             Contact c = new Contact(sender);
 
             //stick message in database
             MessageDatabase.insertMessage(context,new Message(c,body,MessageState.RECV));
         }
         ThreadListActivity.updateThreads();
+        ThreadViewActivity.updateMessages();
     }
 
     private String contactExists( String number,Context context) {
