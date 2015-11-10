@@ -3,7 +3,10 @@ package cs3354group10.messenger;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
 
@@ -34,7 +37,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
             SmsMessage message = SmsMessage.createFromPdu((byte[]) obj);
 
             String body = message.getMessageBody();
-            String sender = message.getOriginatingAddress();
+            String sender = contactExists(message.getOriginatingAddress(),context);
             String str = "Sender: " + sender + "\n\n" + body;
 
             //send notifi
@@ -46,5 +49,25 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
             MessageDatabase.insertMessage(context,new Message(c,body,MessageState.RECV));
         }
         ThreadListActivity.updateThreads();
+    }
+
+    private String contactExists( String number,Context context) {
+/// number is the phone number
+        Uri lookupUri = Uri.withAppendedPath(
+                ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                Uri.encode(number));
+        String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
+        Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, null, null, null);
+        try {
+            if (cur.moveToFirst()) {
+                String FirstName =cur.getString(cur.getColumnIndexOrThrow(ContactsContract.PhoneLookup.DISPLAY_NAME));
+                //String LastName =cur.getString(cur.getColumnIndexOrThrow(ContactsContract.PhoneLookup.))
+                return FirstName;
+            }
+        } finally {
+            if (cur != null)
+                cur.close();
+        }
+        return number;
     }
 }

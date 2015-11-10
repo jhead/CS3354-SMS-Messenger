@@ -214,16 +214,13 @@ public class EditMessageActivity extends Activity {
         for (String a : address)
             manager.sendTextMessage(a, null, message, null, null);
 
-        //TODO: check if contact in database and use that contact if it is
-
         address[0] = contactExists(address[0]);
         Contact c = new Contact(address[0]);
 
         //stick in database
         MessageDatabase.insertMessage(getApplicationContext(), new Message(c, message, MessageState.SENT));
 
-        //TODO: probably switch activity elsewhere
-        //TODO: probably add confirmation for received messages
+        //switch activity
         Intent i = new Intent(this,ThreadListActivity.class);
         startActivity(i);
     }
