@@ -8,11 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-<<<<<<< HEAD
-import android.widget.Button;
-=======
-import android.view.View;
->>>>>>> namdinh-threadview
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -84,7 +79,7 @@ public class ThreadListActivity extends ListActivity {
         //this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
 
         /*** DEBUG: Insert test data into database ***/
-       /* Contact contactJustin = new Contact("Justin Head");
+        Contact contactJustin = new Contact("Justin Head");
         Contact contactSatsuki = new Contact("Satsuki Ueno");
         Contact contactCristian = new Contact("Cristian Ventura");
 
@@ -164,13 +159,11 @@ public class ThreadListActivity extends ListActivity {
             activityInstance.loadThreads();
     }
 
-<<<<<<< HEAD
-
+/*
    public void onClick(View v){
        startActivity(new Intent( cs3354group10.messenger.activities.ThreadListActivity.this , cs3354group10.messenger.activities.EditMessageActivity.class ));
    }
-
-=======
+    */
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -187,7 +180,6 @@ public class ThreadListActivity extends ListActivity {
         intent.putExtra(THREAD_CONTACT, contactName);
         startActivity(intent);
     }
->>>>>>> namdinh-threadview
 }
 
 
