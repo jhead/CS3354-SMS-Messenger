@@ -159,11 +159,10 @@ public class ThreadListActivity extends ListActivity {
             activityInstance.loadThreads();
     }
 
-/*
-   public void onClick(View v){
-       startActivity(new Intent( cs3354group10.messenger.activities.ThreadListActivity.this , cs3354group10.messenger.activities.EditMessageActivity.class ));
-   }
-    */
+    public void onClick(View v){
+        startActivity(new Intent( cs3354group10.messenger.activities.ThreadListActivity.this , cs3354group10.messenger.activities.EditMessageActivity.class ));
+    }
+
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
