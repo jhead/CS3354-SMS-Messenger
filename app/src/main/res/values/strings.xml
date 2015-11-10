@@ -15,5 +15,6 @@
 
     <!--Thread List Activity -->
     <string name="title_activity_thread_list">Messages</string>
+    <string name="title_activity_search">Search Activity</string>
 
 </resources>
