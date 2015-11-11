@@ -8,21 +8,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import android.view.View;
-import android.view.View.OnClickListener;
-
 import java.util.Collection;
 import java.util.HashMap;
 
-import cs3354group10.messenger.Contact;
 import cs3354group10.messenger.Message;
-import cs3354group10.messenger.MessageState;
 import cs3354group10.messenger.db.MessageDatabase;
-import cs3354group10.messenger.db.MessageDatabaseHelper;
 import group10.cs3354.sms_messenger.R;
 
 
@@ -120,6 +115,7 @@ public class ThreadListActivity extends ListActivity {
     protected void onResume() {
         super.onResume();
         active = true;
+        updateThreads();
     }
 
 

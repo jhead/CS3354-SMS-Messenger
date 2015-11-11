@@ -52,14 +52,19 @@ public class ThreadViewActivity extends ListActivity {
         Context context = getApplicationContext();
         threadViewCursor = MessageDatabase.queryMessages(context, contact);
 
-        listAdapter = new SimpleCursorAdapter(this, R.layout.thread_view_item, threadViewCursor, fromColumn, toView, 0);
-        setListAdapter(listAdapter);
+//        if (threadViewCursor.isNull(threadViewCursor.getColumnIndex(Message.DB_COLUMN_NAME_TEXT)))
+//            this.finish();
+//        else {
 
-        /*
-         * To call delete menu by click-and-hold the message.
-         * Make sure that onCreateContextMenu() and onContextItemSelected are called.
-         */
-        registerForContextMenu(getListView());
+            listAdapter = new SimpleCursorAdapter(this, R.layout.thread_view_item, threadViewCursor, fromColumn, toView, 0);
+            setListAdapter(listAdapter);
+
+            /*
+             * To call delete menu by click-and-hold the message.
+             * Make sure that onCreateContextMenu() and onContextItemSelected are called.
+             */
+            registerForContextMenu(getListView());
+//        }
     }
 
     @Override
@@ -89,12 +94,17 @@ public class ThreadViewActivity extends ListActivity {
 
                 // Reload the view and ThreadList
                 loadMessages(this.contact.getName());
-                ThreadListActivity.updateThreads();
                 break;
 
             default:    // Do nothing
         }
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadMessages(this.contact.getName());
     }
 
     @Override
