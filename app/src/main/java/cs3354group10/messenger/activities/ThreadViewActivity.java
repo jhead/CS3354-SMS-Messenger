@@ -134,6 +134,11 @@ public class ThreadViewActivity extends ListActivity {
             case STATE_NORMAL:
                 String message = ((EditText) findViewById(R.id.threadView_messageEditor)).getText().toString();
 
+                if (message == null || message.length() == 0) {
+                    Toast.makeText(this,"Message is empty!",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String address = getNumber(contact.getName());
 
                 if (address == null) {

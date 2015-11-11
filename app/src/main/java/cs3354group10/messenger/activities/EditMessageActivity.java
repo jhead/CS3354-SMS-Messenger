@@ -217,6 +217,15 @@ public class EditMessageActivity extends Activity {
         String message = ((EditText) findViewById(R.id.id_message_field)).getText().toString();
         String address [] = ((EditText) findViewById(R.id.id_phone_field)).getText().toString().split(";");
 
+        if (message == null || message.length() == 0) {
+            Toast.makeText(this,"Message is empty!",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (address == null || address.length == 0){
+            Toast.makeText(this,"Recipient not selected!",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         SmsManager manager = SmsManager.getDefault();
         for (String a : address)
             manager.sendTextMessage(a, null, message, null, null);
