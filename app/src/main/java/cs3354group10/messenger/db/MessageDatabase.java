@@ -55,6 +55,17 @@ public class MessageDatabase {
         return db.query(Message.DB_TABLE_NAME, Message.DB_COLUMNS, selection, selectionArgs, null, null, orderBy);
     }
 
+    public static Cursor queryMessagesForString(Context context, String searchStr) {
+        SQLiteDatabase db = getReadableDatabase(context);
+
+        String selection = Message.DB_COLUMN_NAME_TEXT + " = ?";
+        String[] selectionArgs = new String[] { searchStr };
+
+        String orderBy = Message.DB_COLUMN_NAME_CONTACT + " ASC";
+
+        return db.query(Message.DB_TABLE_NAME, Message.DB_COLUMNS, selection, selectionArgs, null, null, orderBy);
+    }
+
 
     /**
      * Inserts a new message into the database
