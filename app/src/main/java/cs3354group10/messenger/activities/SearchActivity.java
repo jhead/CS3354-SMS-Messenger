@@ -57,11 +57,15 @@ public class SearchActivity extends ListActivity {
         Context context = getApplicationContext();
         messageResultCursor = MessageDatabase.queryMessagesForString(context, searchStr);
 
-        listAdapter = new SimpleCursorAdapter(this, R.layout.search_list_item, messageResultCursor,
-                fromColumn, toView, 0);
+        if (messageResultCursor.getCount() > 0) {
+            listAdapter = new SimpleCursorAdapter(this, R.layout.search_list_item, messageResultCursor,
+                    fromColumn, toView, 0);
 
-        setListAdapter(listAdapter);
-
+            setListAdapter(listAdapter);
+        }
+        else{
+            setListAdapter(null);
+        }
 
         return true;
     }
