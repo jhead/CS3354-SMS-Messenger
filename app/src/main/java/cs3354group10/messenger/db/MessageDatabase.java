@@ -69,4 +69,13 @@ public class MessageDatabase {
         return db.insert(Message.DB_TABLE_NAME, null, message.getFields());
     }
 
+    public static int deleteMessage(Context context, String message) {
+        SQLiteDatabase db = getWritableDatabase(context);
+
+        String where = Message.DB_COLUMN_NAME_TEXT + " = ?";
+        String[] whereArgs = {message};
+
+        return db.delete(Message.DB_TABLE_NAME, where, whereArgs);
+    }
+
 }
