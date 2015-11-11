@@ -22,8 +22,8 @@ public class SearchActivity extends ListActivity {
 
     EditText inputText;
     private ListAdapter listAdapter;
-    private String[] fromColumn = {Message.DB_COLUMN_NAME_TEXT};
-    private int[] toView = {R.id.searchResult};
+    private String[] fromColumn = {Message.DB_COLUMN_NAME_CONTACT, Message.DB_COLUMN_NAME_TEXT};
+    private int[] toView = {R.id.searchResultContact, R.id.searchResultText};
     private Cursor messageResultCursor;
 
 
@@ -54,10 +54,12 @@ public class SearchActivity extends ListActivity {
         Contact brendan = new Contact("Brendan");
         Contact satsuki = new Contact("Satsuki");
         Message message1 = new Message(brendan, "test", MessageState.RECV);
-        Message message2 = new Message(brendan, "another test", MessageState.RECV);
+        Message message2 = new Message(satsuki, "another test", MessageState.RECV);
+        Message message3 = new Message(satsuki, "test", MessageState.RECV);
         Context context = getApplicationContext();
         MessageDatabase.insertMessage(context, message1);
         MessageDatabase.insertMessage(context, message2);
+        MessageDatabase.insertMessage(context, message3);
         messageResultCursor = MessageDatabase.queryMessagesForString(context, searchStr);
 
         listAdapter = new SimpleCursorAdapter(this, R.layout.search_list_item, messageResultCursor,
