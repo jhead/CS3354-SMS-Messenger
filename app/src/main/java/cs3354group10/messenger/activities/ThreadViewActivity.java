@@ -49,7 +49,15 @@ public class ThreadViewActivity extends ListActivity {
         Context context = getApplicationContext();
         Cursor threadViewCursor = MessageDatabase.queryMessages(context, contact);
 
-        listAdapter = new SimpleCursorAdapter(this, R.layout.thread_view_item, threadViewCursor, fromColumn, toView, 0);
+        listAdapter = new SimpleCursorAdapter(
+                this,
+                R.layout.thread_view_item,
+                threadViewCursor,
+                fromColumn,
+                toView,
+                0
+        );
+
         setListAdapter(listAdapter);
     }
 
