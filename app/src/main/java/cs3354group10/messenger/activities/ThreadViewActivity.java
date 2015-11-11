@@ -52,10 +52,6 @@ public class ThreadViewActivity extends ListActivity {
         Context context = getApplicationContext();
         threadViewCursor = MessageDatabase.queryMessages(context, contact);
 
-//        if (threadViewCursor.isNull(threadViewCursor.getColumnIndex(Message.DB_COLUMN_NAME_TEXT)))
-//            this.finish();
-//        else {
-
             listAdapter = new SimpleCursorAdapter(this, R.layout.thread_view_item, threadViewCursor, fromColumn, toView, 0);
             setListAdapter(listAdapter);
 
@@ -64,7 +60,6 @@ public class ThreadViewActivity extends ListActivity {
              * Make sure that onCreateContextMenu() and onContextItemSelected are called.
              */
             registerForContextMenu(getListView());
-//        }
     }
 
     @Override
