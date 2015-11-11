@@ -75,18 +75,6 @@ public class ThreadListActivity extends ListActivity {
         setContentView(R.layout.activity_thread_list);
 
         activityInstance = this;
-        /*
-        this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
-        Contact brendan = new Contact("Brendan");
-        Contact satsuki = new Contact("Satsuki");
-        Message message1 = new Message(brendan, "test", MessageState.RECV);
-        Message message2 = new Message(satsuki, "another tests", MessageState.RECV);
-        Message message3 = new Message(satsuki, "midtestmid", MessageState.RECV);
-        Context context = getApplicationContext();
-        MessageDatabase.insertMessage(context, message1);
-        MessageDatabase.insertMessage(context, message2);
-        MessageDatabase.insertMessage(context, message3);
-        */
         
         loadThreads();
     }
@@ -172,6 +160,12 @@ public class ThreadListActivity extends ListActivity {
         Intent intent = new Intent(this, ThreadViewActivity.class);
         intent.putExtra(THREAD_CONTACT, contactName);
         startActivity(intent);
+    }
+
+
+    public void onClick(View view){
+        Intent i = new Intent(this, EditMessageActivity.class);
+        startActivity(i);
     }
 }
 
