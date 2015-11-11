@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import android.provider.ContactsContract.Contacts;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -51,6 +52,12 @@ public class EditMessageActivity extends Activity {
         setContentView(R.layout.activity_edit_message);
 
         activityInstance = this;
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(ThreadViewActivity.FORWARD_MESSAGE)){
+            EditText e = (EditText)findViewById(R.id.id_message_field);
+            e.setText(intent.getStringExtra(ThreadViewActivity.FORWARD_MESSAGE), TextView.BufferType.EDITABLE);
+        }
     }
 
 

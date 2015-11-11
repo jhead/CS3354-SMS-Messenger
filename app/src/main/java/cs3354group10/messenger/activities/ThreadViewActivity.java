@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -36,6 +37,14 @@ public class ThreadViewActivity extends ListActivity {
     private Contact contact;
     private static ThreadViewActivity instance = null;
     private static boolean active = false;
+
+    //states used to determine what to do when a message is clicked
+    private static final int STATE_NORMAL = 0;
+    private static final int STATE_FORWARD = 1;
+    private int state = 0;
+
+    public static final String FORWARD_MESSAGE = "Message to forward";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +100,7 @@ public class ThreadViewActivity extends ListActivity {
         listAdapter.setViewBinder(binder);
         setListAdapter(listAdapter);
 
-        getListView().setSelection(threadViewCursor.getCount()-1);
+        getListView().setSelection(threadViewCursor.getCount() - 1);
     }
 
     @Override
@@ -109,7 +118,11 @@ public class ThreadViewActivity extends ListActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.view_forward) {
+            state = STATE_FORWARD;
+            setTitle("Forward");
+            Button b = (Button)findViewById(R.id.button);
+            b.setText("Cancel");
             return true;
         }
 
@@ -117,27 +130,38 @@ public class ThreadViewActivity extends ListActivity {
     }
 
     public void onSendPressed(View view){
-        String message = ((EditText) findViewById(R.id.threadView_messageEditor)).getText().toString();
+        switch (state) {
+            case STATE_NORMAL:
+                String message = ((EditText) findViewById(R.id.threadView_messageEditor)).getText().toString();
 
-        String address = getNumber(contact.getName());
+                String address = getNumber(contact.getName());
 
-        if (address == null){
-            Toast t = Toast.makeText(this,"Error finding phone number for contact.",Toast.LENGTH_SHORT);
-            t.show();
-            return;
+                if (address == null) {
+                    Toast t = Toast.makeText(this, "Error finding phone number for contact.", Toast.LENGTH_SHORT);
+                    t.show();
+                    return;
+                }
+
+                SmsManager manager = SmsManager.getDefault();
+                manager.sendTextMessage(address, null, message, null, null);
+
+                String recipient = contactExists(contact.getName());
+
+                //stick in database
+                MessageDatabase.insertMessage(getApplicationContext(), new Message(contact, message, MessageState.SENT));
+                loadMessages(contact.getName());
+
+                EditText e = (EditText) findViewById(R.id.threadView_messageEditor);
+                e.setText("", TextView.BufferType.EDITABLE);
+                break;
+
+            case STATE_FORWARD:
+                state = STATE_NORMAL;
+                Button b = (Button) findViewById(R.id.button);
+                b.setText("Send");
+                setTitle(contact.getName());
+                break;
         }
-
-        SmsManager manager = SmsManager.getDefault();
-        manager.sendTextMessage(address, null, message, null, null);
-
-        String recipient = contactExists(contact.getName());
-
-        //stick in database
-        MessageDatabase.insertMessage(getApplicationContext(), new Message(contact, message, MessageState.SENT));
-        loadMessages(contact.getName());
-
-        EditText e =(EditText) findViewById(R.id.threadView_messageEditor);
-        e.setText("", TextView.BufferType.EDITABLE);
     }
 
 
@@ -174,5 +198,28 @@ public class ThreadViewActivity extends ListActivity {
                 cur.close();
         }
         return name; //when name is number (when contact doesnt exist)
+    }
+
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l,v,position,id);
+        switch(state){
+            case STATE_NORMAL:
+                //do nothing
+                break;
+
+            case STATE_FORWARD:
+                state = STATE_NORMAL;
+                //copy data and move to new activity
+                Cursor cursor = listAdapter.getCursor();
+                cursor.moveToPosition(position);
+                String message = cursor.getString(cursor.getColumnIndex(Message.DB_COLUMN_NAME_TEXT));
+
+                Intent intent = new Intent(this, EditMessageActivity.class);
+                intent.putExtra(FORWARD_MESSAGE, "Fwd: " + message);
+                startActivity(intent);
+                break;
+        }
     }
 }
