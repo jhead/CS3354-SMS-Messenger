@@ -90,7 +90,8 @@ public class ThreadViewActivity extends ListActivity {
                 // Point to the message, get the content and delete it
                 threadViewCursor.moveToPosition(messageID);
                 String message = threadViewCursor.getString(threadViewCursor.getColumnIndex(Message.DB_COLUMN_NAME_TEXT));
-                MessageDatabase.deleteMessage(context, message);
+                String timeStamp = threadViewCursor.getString(threadViewCursor.getColumnIndex(Message.DB_COLUMN_NAME_TIMESTAMP));
+                MessageDatabase.deleteMessage(context, message, timeStamp);
 
                 // Reload the view and ThreadList
                 loadMessages(this.contact.getName());
