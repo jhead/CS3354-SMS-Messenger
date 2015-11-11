@@ -58,8 +58,9 @@ public class MessageDatabase {
     public static Cursor queryMessagesForString(Context context, String searchStr) {
         SQLiteDatabase db = getReadableDatabase(context);
 
-        String selection = Message.DB_COLUMN_NAME_TEXT + " = ?";
-        String[] selectionArgs = new String[] { searchStr };
+        //String selection = Message.DB_COLUMN_NAME_TEXT + " LIKE '%" + searchStr + "%'";
+        String selection = Message.DB_COLUMN_NAME_TEXT + " LIKE ?";
+        String[] selectionArgs = new String[] {"%" + searchStr + "%"};
 
         String orderBy = Message.DB_COLUMN_NAME_TIMESTAMP + " ASC";
 
