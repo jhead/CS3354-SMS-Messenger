@@ -162,9 +162,6 @@ public class ThreadViewActivity extends ListActivity {
     }
 
     private String getNumber(String name){
-        //Uri lookup = Uri.withAppendedPath(
-          //      ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
-            //    Uri.encode(name));
         Cursor cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + "=?", new String[] { name }, null);
         try {
@@ -176,6 +173,6 @@ public class ThreadViewActivity extends ListActivity {
             if (cur != null)
                 cur.close();
         }
-        return null;
+        return name; //when name is number (when contact doesnt exist)
     }
 }
