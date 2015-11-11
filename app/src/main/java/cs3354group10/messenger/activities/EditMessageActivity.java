@@ -62,7 +62,7 @@ public class EditMessageActivity extends Activity {
 
 
 
-    public void onClickCancel(View v){
+    public void onCancelPressed(View v){
         startActivity(new Intent(cs3354group10.messenger.activities.EditMessageActivity.this, cs3354group10.messenger.activities.ThreadListActivity.class));
     }
 
