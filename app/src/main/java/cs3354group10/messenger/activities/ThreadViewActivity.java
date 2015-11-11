@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,14 +22,16 @@ import android.widget.Toast;
 import cs3354group10.messenger.Contact;
 import cs3354group10.messenger.Message;
 import cs3354group10.messenger.MessageState;
+import cs3354group10.messenger.ThreadViewBinder;
 import cs3354group10.messenger.db.MessageDatabase;
 import cs3354group10.messenger.db.MessageDatabaseHelper;
 import group10.cs3354.sms_messenger.R;
 
 public class ThreadViewActivity extends ListActivity {
 
-    private ListAdapter listAdapter;
-    private String[] fromColumn = {Message.DB_COLUMN_NAME_TEXT};
+    private SimpleCursorAdapter listAdapter;
+    private SimpleCursorAdapter.ViewBinder binder;
+    private String[] fromColumn = {Message.DB_COLUMN_NAME_TEXT, Message.DB_COLUMN_NAME_STATE};
     private int[] toView = {R.id.threadViewItemMessage};
     private Contact contact;
     private static ThreadViewActivity instance = null;
@@ -38,6 +41,8 @@ public class ThreadViewActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         instance = this;
+        binder = new ThreadViewBinder();
+
         setContentView(R.layout.activity_thread_view);
 
         Intent intent = getIntent();
@@ -83,7 +88,10 @@ public class ThreadViewActivity extends ListActivity {
         Cursor threadViewCursor = MessageDatabase.queryMessages(context, contact);
 
         listAdapter = new SimpleCursorAdapter(this, R.layout.thread_view_item, threadViewCursor, fromColumn, toView, 0);
+        listAdapter.setViewBinder(binder);
         setListAdapter(listAdapter);
+
+        getListView().setSelection(threadViewCursor.getCount()-1);
     }
 
     @Override
@@ -157,7 +165,8 @@ public class ThreadViewActivity extends ListActivity {
         //Uri lookup = Uri.withAppendedPath(
           //      ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
             //    Uri.encode(name));
-        Cursor cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + "=?", new String[] { name }, null);
+        Cursor cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + "=?", new String[] { name }, null);
         try {
             if (cur.moveToFirst()) {
                 String number = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
