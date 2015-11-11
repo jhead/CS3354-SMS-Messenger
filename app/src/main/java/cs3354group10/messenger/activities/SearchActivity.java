@@ -15,6 +15,7 @@ import cs3354group10.messenger.Contact;
 import cs3354group10.messenger.Message;
 import cs3354group10.messenger.MessageState;
 import cs3354group10.messenger.db.MessageDatabase;
+import cs3354group10.messenger.db.MessageDatabaseHelper;
 import group10.cs3354.sms_messenger.R;
 
 public class SearchActivity extends ListActivity {
@@ -23,6 +24,8 @@ public class SearchActivity extends ListActivity {
     private ListAdapter listAdapter;
     private String[] fromColumn = {Message.DB_COLUMN_NAME_TEXT};
     private int[] toView = {R.id.searchResult};
+    private Cursor messageResultCursor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,30 +39,33 @@ public class SearchActivity extends ListActivity {
             public void onClick(View v) {
                 String str = inputText.getText().toString();
 
-                if(searchMessages(str)){
-
-                }
-                else{
-
-                }
+                searchMessages(str);
 
             }
         });
     }
 
     private boolean searchMessages(String searchStr){
+
+
+
         //DEBUG MESSAGES
-
-
-
+        this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
+        Contact brendan = new Contact("Brendan");
+        Contact satsuki = new Contact("Satsuki");
+        Message message1 = new Message(brendan, "test", MessageState.RECV);
+        Message message2 = new Message(brendan, "another test", MessageState.RECV);
         Context context = getApplicationContext();
-        MessageDatabase.insertMessage(context, new Message(new Contact("Brendan"), "test", MessageState.RECV));
-        Cursor messageResultCursor = MessageDatabase.queryMessagesForString(context, searchStr);
+        MessageDatabase.insertMessage(context, message1);
+        MessageDatabase.insertMessage(context, message2);
+        messageResultCursor = MessageDatabase.queryMessagesForString(context, searchStr);
 
         listAdapter = new SimpleCursorAdapter(this, R.layout.search_list_item, messageResultCursor,
                 fromColumn, toView, 0);
 
         setListAdapter(listAdapter);
+
+
         return true;
     }
 

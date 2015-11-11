@@ -61,7 +61,7 @@ public class MessageDatabase {
         String selection = Message.DB_COLUMN_NAME_TEXT + " = ?";
         String[] selectionArgs = new String[] { searchStr };
 
-        String orderBy = Message.DB_COLUMN_NAME_CONTACT + " ASC";
+        String orderBy = Message.DB_COLUMN_NAME_TIMESTAMP + " ASC";
 
         return db.query(Message.DB_TABLE_NAME, Message.DB_COLUMNS, selection, selectionArgs, null, null, orderBy);
     }
