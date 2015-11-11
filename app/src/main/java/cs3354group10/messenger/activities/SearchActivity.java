@@ -1,16 +1,18 @@
 package cs3354group10.messenger.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.app.ListActivity;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-
 import cs3354group10.messenger.Contact;
 import cs3354group10.messenger.Message;
 import cs3354group10.messenger.MessageState;
@@ -20,7 +22,8 @@ import group10.cs3354.sms_messenger.R;
 
 public class SearchActivity extends ListActivity {
 
-    EditText inputText;
+    public final static String THREAD_CONTACT = "Contact name will be stored here by intent";
+    private EditText inputText;
     private ListAdapter listAdapter;
     private String[] fromColumn = {Message.DB_COLUMN_NAME_CONTACT, Message.DB_COLUMN_NAME_TEXT};
     private int[] toView = {R.id.searchResultContact, R.id.searchResultText};
@@ -50,16 +53,8 @@ public class SearchActivity extends ListActivity {
 
 
         //DEBUG MESSAGES
-        this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
-        Contact brendan = new Contact("Brendan");
-        Contact satsuki = new Contact("Satsuki");
-        Message message1 = new Message(brendan, "test", MessageState.RECV);
-        Message message2 = new Message(satsuki, "another test", MessageState.RECV);
-        Message message3 = new Message(satsuki, "test", MessageState.RECV);
+        //this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
         Context context = getApplicationContext();
-        MessageDatabase.insertMessage(context, message1);
-        MessageDatabase.insertMessage(context, message2);
-        MessageDatabase.insertMessage(context, message3);
         messageResultCursor = MessageDatabase.queryMessagesForString(context, searchStr);
 
         listAdapter = new SimpleCursorAdapter(this, R.layout.search_list_item, messageResultCursor,
@@ -71,6 +66,22 @@ public class SearchActivity extends ListActivity {
         return true;
     }
 
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
 
+        SimpleCursorAdapter adapter = (SimpleCursorAdapter) listAdapter;
+        Cursor cursor = adapter.getCursor();
+        cursor.moveToPosition(position);
+
+        //Get the name of the contact that we clicked on
+        String contactName = cursor.getString(cursor.getColumnIndex("contact"));
+        Log.d("mes", contactName);
+
+
+        Intent intent = new Intent(this, ThreadViewActivity.class);
+        intent.putExtra(THREAD_CONTACT, contactName);
+        startActivity(intent);
+    }
 
 }
