@@ -143,6 +143,8 @@ public class ThreadViewActivity extends ListActivity {
         Message message = Message.fromCursor(threadViewCursor);
 
         Intent intent;
+        String origContact = message.getContact().getName();
+        MessageState state = message.getState();
 
         switch (menuItem) {
             case "Delete":
@@ -158,6 +160,12 @@ public class ThreadViewActivity extends ListActivity {
             case "Forward":
                 intent = new Intent(this, EditMessageActivity.class);
                 intent.putExtra(EditMessageActivity.EXTRA_MESSAGE, message.getText());
+
+                if (state.equals(MessageState.RECV))
+                    intent.putExtra(FORWARD_MESSAGE, "Fowarded message from " + origContact + ": " + message);
+                else
+                    intent.putExtra(FORWARD_MESSAGE, "Fowarded message originally sent to " + origContact +": " + message);
+
                 startActivity(intent);
                 break;
 
@@ -168,6 +176,7 @@ public class ThreadViewActivity extends ListActivity {
                 intent.putExtra(EditMessageActivity.EXTRA_MESSAGE, message.getText());
 
                 MessageDatabase.deleteDraft(this, message);
+
                 startActivity(intent);
                 break;
             default:
