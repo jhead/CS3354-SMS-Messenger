@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import cs3354group10.messenger.Message;
+import cs3354group10.messenger.MessageState;
 
 public class MessageDatabase {
 
@@ -81,11 +82,11 @@ public class MessageDatabase {
         return db.insert(Message.DB_TABLE_NAME, null, message.getFields());
     }
 
-    public static int deleteMessage(Context context, String message, String timestamp) {
+    public static int deleteMessage(Context context, String message, long timestamp) {
         SQLiteDatabase db = getWritableDatabase(context);
 
         String where = Message.DB_COLUMN_NAME_TEXT + " = ? AND " + Message.DB_COLUMN_NAME_TIMESTAMP + " = ?";
-        String[] whereArgs = {message, timestamp};
+        String[] whereArgs = { message, new Long(timestamp).toString() };
 
         return db.delete(Message.DB_TABLE_NAME, where, whereArgs);
     }
@@ -95,6 +96,23 @@ public class MessageDatabase {
 
         String where = Message.DB_COLUMN_NAME_CONTACT + " = ?";
         String[] whereArgs = {contact};
+
+        return db.delete(Message.DB_TABLE_NAME, where, whereArgs);
+    }
+
+    public static int deleteDraft(Context context, Message message) {
+        SQLiteDatabase db = getWritableDatabase(context);
+
+        String where = "";
+
+        where += Message.DB_COLUMN_NAME_TEXT + " = ? AND ";
+        where += Message.DB_COLUMN_NAME_TIMESTAMP + " = ? AND ";
+        where += Message.DB_COLUMN_NAME_STATE + " = " + MessageState.DRAFT.getValue();
+
+        String[] whereArgs = {
+                message.getText(),
+                new Long(message.getTimestamp()).toString()
+        };
 
         return db.delete(Message.DB_TABLE_NAME, where, whereArgs);
     }
