@@ -6,23 +6,20 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import android.view.View;
-import android.view.View.OnClickListener;
-
 import java.util.Collection;
 import java.util.HashMap;
 
-import cs3354group10.messenger.Contact;
 import cs3354group10.messenger.Message;
-import cs3354group10.messenger.MessageState;
 import cs3354group10.messenger.db.MessageDatabase;
-import cs3354group10.messenger.db.MessageDatabaseHelper;
 import group10.cs3354.sms_messenger.R;
 
 
@@ -92,6 +89,7 @@ public class ThreadListActivity extends ListActivity {
 
         listAdapter = (SimpleCursorAdapter) createCursorAdapter(this, R.layout.thread_list_item, threadListCursor, 0);
         setListAdapter(listAdapter);
+        registerForContextMenu(getListView());
     }
 
     @Override
@@ -120,6 +118,7 @@ public class ThreadListActivity extends ListActivity {
     protected void onResume() {
         super.onResume();
         active = true;
+        updateThreads();
     }
 
 
@@ -163,9 +162,44 @@ public class ThreadListActivity extends ListActivity {
     }
 
 
-    public void onClick(View view){
+
+    public void onClick(View view) {
         Intent i = new Intent(this, EditMessageActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("Options");
+        String[] menuItems = {"Delete"};
+        // Add items to menu
+        for (int i = 0; i < menuItems.length; i++)
+            menu.add(menuItems[i]);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        String menuItem = (String) item.getTitle();
+        switch (menuItem) {
+            case "Delete":
+                // TODO: Confirm deletion
+                Context context = getApplicationContext();
+                // Get the extra information set by ListView aka the thread
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                // row id of the item for which the context menu is being displayed.
+                int threadID = info.position;
+                // Point to the thread, get the content and delete it
+                Cursor threadListCursor = listAdapter.getCursor();
+                threadListCursor.moveToPosition(threadID);
+
+                String contact = threadListCursor.getString(threadListCursor.getColumnIndex(Message.DB_COLUMN_NAME_CONTACT));
+                MessageDatabase.deleteThread(context, contact);
+
+                // Reload the view
+                updateThreads();
+                break;
+        }
+        return true;
     }
 }
 

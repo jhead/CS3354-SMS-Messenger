@@ -9,13 +9,12 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,8 +24,8 @@ import cs3354group10.messenger.Message;
 import cs3354group10.messenger.MessageState;
 import cs3354group10.messenger.ThreadViewBinder;
 import cs3354group10.messenger.db.MessageDatabase;
-import cs3354group10.messenger.db.MessageDatabaseHelper;
 import group10.cs3354.sms_messenger.R;
+
 
 public class ThreadViewActivity extends ListActivity {
 
@@ -38,13 +37,8 @@ public class ThreadViewActivity extends ListActivity {
     private static ThreadViewActivity instance = null;
     private static boolean active = false;
 
-    //states used to determine what to do when a message is clicked
-    private static final int STATE_NORMAL = 0;
-    private static final int STATE_FORWARD = 1;
-    private int state = 0;
-
     public static final String FORWARD_MESSAGE = "Message to forward";
-
+    private Cursor threadViewCursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +51,6 @@ public class ThreadViewActivity extends ListActivity {
         Intent intent = getIntent();
 
         contact = findContact(intent.getStringExtra(ThreadListActivity.THREAD_CONTACT));
-
         setTitle(contact.getName());
         loadMessages(contact.getName());
     }
@@ -72,7 +65,7 @@ public class ThreadViewActivity extends ListActivity {
     protected void onResume(){
         super.onResume();
         active = true;
-        loadMessages(contact.getName());
+        loadMessages(this.contact.getName());
     }
 
     public static void updateMessages(){
@@ -93,7 +86,7 @@ public class ThreadViewActivity extends ListActivity {
 
     protected void loadMessages(String contact) {
         Context context = getApplicationContext();
-        Cursor threadViewCursor = MessageDatabase.queryMessages(context, contact);
+        threadViewCursor = MessageDatabase.queryMessages(context, contact);
 
         listAdapter = new SimpleCursorAdapter(this, R.layout.thread_view_item, threadViewCursor, fromColumn, toView, 0);
         listAdapter.setViewBinder(binder);
@@ -101,7 +94,59 @@ public class ThreadViewActivity extends ListActivity {
         setListAdapter(listAdapter);
 
         getListView().setSelection(threadViewCursor.getCount() - 1);
+
+
+            /*
+             * To call delete menu by click-and-hold the message.
+             * Make sure that onCreateContextMenu() and onContextItemSelected are called.
+             */
+            registerForContextMenu(getListView());
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("Message Options");
+        String[] menuItems = {"Delete", "Forward"};
+        // Add items to menu
+        for (int i = 0; i < menuItems.length; i++)
+            menu.add(menuItems[i]);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        String menuItem = (String) item.getTitle();
+
+        Context context = getApplicationContext();
+        // Get the extra information set by ListView aka the message
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        // row id of the item for which the context menu is being displayed.
+        int messageID = info.position;
+        // Point to the message, get the content and delete it
+        threadViewCursor.moveToPosition(messageID);
+        String message = threadViewCursor.getString(threadViewCursor.getColumnIndex(Message.DB_COLUMN_NAME_TEXT));
+
+        switch (menuItem) {
+            case "Delete":
+                // TODO: Confirm deletion
+
+
+                String timeStamp = threadViewCursor.getString(threadViewCursor.getColumnIndex(Message.DB_COLUMN_NAME_TIMESTAMP));
+                MessageDatabase.deleteMessage(context, message, timeStamp);
+
+                // Reload the view and ThreadList
+                loadMessages(this.contact.getName());
+                break;
+
+            case "Forward":
+                Intent intent = new Intent(this, EditMessageActivity.class);
+                intent.putExtra(FORWARD_MESSAGE, "Fwd: " + message);
+                startActivity(intent);
+                break;
+            default:    // Do nothing
+        }
+        return true;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,13 +163,7 @@ public class ThreadViewActivity extends ListActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.view_forward) {
-            state = STATE_FORWARD;
-            setTitle("Forward");
-            Button b = (Button)findViewById(R.id.button);
-            b.setText("Cancel");
-
-            Toast.makeText(this, "Tap the message you want to forward", Toast.LENGTH_SHORT).show();
+        if (id == R.id.action_settings) {
             return true;
         }
 
@@ -132,38 +171,27 @@ public class ThreadViewActivity extends ListActivity {
     }
 
     public void onSendPressed(View view){
-        switch (state) {
-            case STATE_NORMAL:
-                String message = ((EditText) findViewById(R.id.threadView_messageEditor)).getText().toString();
+        String message = ((EditText) findViewById(R.id.threadView_messageEditor)).getText().toString();
 
-                String address = getNumber(contact.getName());
+        String address = getNumber(contact.getName());
 
-                if (address == null) {
-                    Toast t = Toast.makeText(this, "Error finding phone number for contact.", Toast.LENGTH_SHORT);
-                    t.show();
-                    return;
-                }
-
-                SmsManager manager = SmsManager.getDefault();
-                manager.sendTextMessage(address, null, message, null, null);
-
-                String recipient = contactExists(contact.getName());
-
-                //stick in database
-                MessageDatabase.insertMessage(getApplicationContext(), new Message(contact, message, MessageState.SENT));
-                loadMessages(contact.getName());
-
-                EditText e = (EditText) findViewById(R.id.threadView_messageEditor);
-                e.setText("", TextView.BufferType.EDITABLE);
-                break;
-
-            case STATE_FORWARD:
-                state = STATE_NORMAL;
-                Button b = (Button) findViewById(R.id.button);
-                b.setText("Send");
-                setTitle(contact.getName());
-                break;
+        if (address == null) {
+            Toast t = Toast.makeText(this, "Error finding phone number for contact.", Toast.LENGTH_SHORT);
+            t.show();
+            return;
         }
+
+        SmsManager manager = SmsManager.getDefault();
+        manager.sendTextMessage(address, null, message, null, null);
+
+        String recipient = contactExists(contact.getName());
+
+        //stick in database
+        MessageDatabase.insertMessage(getApplicationContext(), new Message(contact, message, MessageState.SENT));
+        loadMessages(contact.getName());
+
+        EditText e = (EditText) findViewById(R.id.threadView_messageEditor);
+        e.setText("", TextView.BufferType.EDITABLE);
     }
 
 
@@ -202,34 +230,4 @@ public class ThreadViewActivity extends ListActivity {
         return name; //when name is number (when contact doesnt exist)
     }
 
-
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        Cursor cursor = listAdapter.getCursor();
-        cursor.moveToPosition(position);
-
-        Message message = Message.fromCursor(cursor);
-        String messageText = message.getText();
-
-        switch(state){
-            case STATE_NORMAL:
-                if (message.isDraft()) {
-                    Intent intent = new Intent(this, EditMessageActivity.class);
-                    intent.putExtra()
-                }
-
-                break;
-
-            case STATE_FORWARD:
-                state = STATE_NORMAL;
-                //copy data and move to new activity
-                Intent intent = new Intent(this, EditMessageActivity.class);
-                intent.putExtra(FORWARD_MESSAGE, "Fwd: " + messageText);
-
-                startActivity(intent);
-                break;
-        }
-    }
 }
