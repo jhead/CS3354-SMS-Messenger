@@ -13,7 +13,9 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginBottom="10dp"
-        android:id="@android:id/list" />
+        android:id="@android:id/list"
+        android:dividerHeight="5dp"
+        android:divider="#EFEFEF"/>
 
     <LinearLayout
         android:orientation="horizontal"
