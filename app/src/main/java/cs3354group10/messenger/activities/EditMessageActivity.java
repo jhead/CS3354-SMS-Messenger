@@ -290,8 +290,13 @@ public class EditMessageActivity extends Activity {
         }
 
         SmsManager manager = SmsManager.getDefault();
-        for (String a : address)
-            manager.sendTextMessage(a, null, message, null, null);
+        for (String a : address) {
+            try {
+                manager.sendTextMessage(a, null, message, null, null);
+            } catch (Exception ex) {
+                //
+            }
+        }
 
         address[0] = contactExists(address[0]);
         Contact c = new Contact(address[0]);
