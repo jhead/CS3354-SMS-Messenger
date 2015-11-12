@@ -1,5 +1,11 @@
 ##GENERIC MESSENGER V1.0
 
+- Justin Head
+- Nam Dinh
+- Cristian Ventura
+- Satsuki Ueno
+- Brendan Honea
+
 ####Overview
 The purpose of this app is provide the user with a very easy to use SMS messaging interface that is compatible with the stock Android contacts app.
 
