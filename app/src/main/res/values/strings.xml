@@ -12,6 +12,7 @@
     <string name="message_hint">Edit Message</string>
     <string name="send">SEND</string>
     <string name="sendto_hint">Recipient</string>
+    <string name="action_save">Save as draft</string>
 
     <!--Thread List Activity -->
     <string name="title_activity_thread_list">Messages</string>
