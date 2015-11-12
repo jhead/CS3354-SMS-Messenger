@@ -124,6 +124,8 @@ public class ThreadViewActivity extends ListActivity {
         // Point to the message, get the content and delete it
         threadViewCursor.moveToPosition(messageID);
         String message = threadViewCursor.getString(threadViewCursor.getColumnIndex(Message.DB_COLUMN_NAME_TEXT));
+        String origContact = threadViewCursor.getString(threadViewCursor.getColumnIndex(Message.DB_COLUMN_NAME_CONTACT));
+        int state = threadViewCursor.getInt(threadViewCursor.getColumnIndex(Message.DB_COLUMN_NAME_STATE));
 
         switch (menuItem) {
             case "Delete":
@@ -139,7 +141,10 @@ public class ThreadViewActivity extends ListActivity {
 
             case "Forward":
                 Intent intent = new Intent(this, EditMessageActivity.class);
-                intent.putExtra(FORWARD_MESSAGE, "Fwd: " + message);
+                if (state == MessageState.RECV.getValue())
+                    intent.putExtra(FORWARD_MESSAGE, "Fowarded message from " + origContact + ": " + message);
+                else
+                    intent.putExtra(FORWARD_MESSAGE, "Fowarded message originally sent to " + origContact +": " + message);
                 startActivity(intent);
                 break;
             default:    // Do nothing
