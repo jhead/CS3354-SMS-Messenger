@@ -212,7 +212,7 @@ public class ThreadViewActivity extends ListActivity {
     public void onSendPressed(View view){
         String message = ((EditText) findViewById(R.id.threadView_messageEditor)).getText().toString();
 
-        String address = getNumber(contact.getName());
+        String address = Contact.resolveNumber(this, contact.getName());
 
         if (address == null) {
             Toast t = Toast.makeText(this, "Error finding phone number for contact.", Toast.LENGTH_SHORT);
@@ -228,7 +228,7 @@ public class ThreadViewActivity extends ListActivity {
         SmsManager manager = SmsManager.getDefault();
         manager.sendTextMessage(address, null, message, null, null);
 
-        String recipient = contactExists(contact.getName());
+        String recipient = Contact.resolveName(this, contact.getName());
 
         //stick in database
         MessageDatabase.insertMessage(getApplicationContext(), new Message(contact, message, MessageState.SENT));
@@ -236,42 +236,6 @@ public class ThreadViewActivity extends ListActivity {
 
         EditText e = (EditText) findViewById(R.id.threadView_messageEditor);
         e.setText("", TextView.BufferType.EDITABLE);
-    }
-
-
-    private String contactExists( String number) {
-/// number is the phone number
-        Uri lookupUri = Uri.withAppendedPath(
-                ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
-                Uri.encode(number));
-        String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
-        Cursor cur = getContentResolver().query(lookupUri, mPhoneNumberProjection, null, null, null);
-        try {
-            if (cur.moveToFirst()) {
-                String FirstName =cur.getString(cur.getColumnIndexOrThrow(ContactsContract.PhoneLookup.DISPLAY_NAME));
-                //String LastName =cur.getString(cur.getColumnIndexOrThrow(ContactsContract.PhoneLookup.))
-                return FirstName;
-            }
-        } finally {
-            if (cur != null)
-                cur.close();
-        }
-        return number;
-    }
-
-    private String getNumber(String name){
-        Cursor cur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + "=?", new String[] { name }, null);
-        try {
-            if (cur.moveToFirst()) {
-                String number = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                return number;
-            }
-        } finally {
-            if (cur != null)
-                cur.close();
-        }
-        return name; //when name is number (when contact doesnt exist)
     }
 
 }

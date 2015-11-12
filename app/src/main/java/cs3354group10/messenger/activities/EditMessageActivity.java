@@ -63,7 +63,7 @@ public class EditMessageActivity extends Activity {
         }
 
         if (intent.hasExtra(EXTRA_RECIPIENTS)) {
-            setMessageRecipients(intent.getStringExtra(EXTRA_RECIPIENTS));
+            setMessageRecipients(Contact.resolveNumber(this, intent.getStringExtra(EXTRA_RECIPIENTS)));
         }
     }
 
@@ -208,15 +208,40 @@ public class EditMessageActivity extends Activity {
         String messageText = getMessageText();
         String recipients = getMessageRecipients();
 
-        Contact contact = new Contact(recipients);
-
-        Message draft = new Message(contact, messageText, MessageState.DRAFT);
+        Message draft = createMessage(recipients, messageText, MessageState.DRAFT);
         MessageDatabase.insertMessage(this, draft);
 
         Intent intent = new Intent(this, ThreadListActivity.class);
         startActivity(intent);
 
         return true;
+    }
+
+    private Message createMessage(String recipients, String messageText, MessageState state) {
+        if (messageText == null || messageText.length() == 0) {
+            Toast.makeText(this,"Message is empty!",Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
+        if (recipients == null || recipients.length() == 0){
+            Toast.makeText(this,"Recipient not selected!",Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
+        String[] addresses = recipients.split(";");
+        recipients = "";
+
+        for (String address : addresses) {
+            recipients += Contact.resolveName(this, address) + ",";
+        }
+
+        if (recipients.length() > 0) {
+            recipients = recipients.substring(0, recipients.length() - 1);
+        }
+
+        Contact contact = new Contact(recipients);
+
+        return new Message(contact, messageText, state);
     }
 
     private EditText getMessageTextField() {
@@ -249,63 +274,36 @@ public class EditMessageActivity extends Activity {
                 .trim();
     }
 
-
-    public String contactExists( String number) {
-/// number is the phone number
-        Uri lookupUri = Uri.withAppendedPath(
-                ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
-                Uri.encode(number));
-        String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
-        Cursor cur = getContentResolver().query(lookupUri, mPhoneNumberProjection, null, null, null);
-        try {
-            if (cur.moveToFirst()) {
-                String FirstName =cur.getString(cur.getColumnIndexOrThrow(ContactsContract.PhoneLookup.DISPLAY_NAME));
-                //String LastName =cur.getString(cur.getColumnIndexOrThrow(ContactsContract.PhoneLookup.))
-                return FirstName;
-            }
-        } finally {
-            if (cur != null)
-                cur.close();
-        }
-        return number;
-    }
-
-
     /**
      * onSendPressed
      * sends the message, multiple contacts indicated by splitting with ';'
      * @param view Not used
      */
     public void onSendPressed(View view){
-        String message = ((EditText) findViewById(R.id.id_message_field)).getText().toString();
-        String address [] = ((EditText) findViewById(R.id.id_phone_field)).getText().toString().split(";");
-
-        if (message == null || message.length() == 0) {
-            Toast.makeText(this,"Message is empty!",Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (address == null || address.length == 0){
-            Toast.makeText(this,"Recipient not selected!",Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         SmsManager manager = SmsManager.getDefault();
-        for (String a : address) {
+
+        String messageText = getMessageText();
+        Message message = createMessage(getMessageRecipients(), messageText, MessageState.SENT);
+
+        if (message == null) {
+            // Message failed to send
+            return;
+        }
+
+        String[] recipients = getMessageRecipients().split(";");
+        for (String a : recipients) {
             try {
-                manager.sendTextMessage(a, null, message, null, null);
+                manager.sendTextMessage(a, null, messageText, null, null);
             } catch (Exception ex) {
-                //
+                // Message failed to send
             }
         }
 
-        address[0] = contactExists(address[0]);
-        Contact c = new Contact(address[0]);
-
         //stick in database
-        MessageDatabase.insertMessage(this, new Message(c, message, MessageState.SENT));
+        MessageDatabase.insertMessage(this, message);
 
         //switch activity
-        Intent i = new Intent(this,ThreadListActivity.class);
+        Intent i = new Intent(this, ThreadListActivity.class);
         startActivity(i);
     }
 
