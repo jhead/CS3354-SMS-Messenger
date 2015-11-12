@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Message"
+            android:id="@+id/button2"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="@android:id/list"
+            android:onClick="onCreateClick" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search Messages"
+        android:id="@+id/searchButton"
+        android:layout_gravity="right"
+        android:onClick="onSearchClick"/>
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@android:id/list"
+            android:smoothScrollbar="false" />
+
+
+    </LinearLayout>
+
+<!-- From: file:/home/cristianventura/CS3354-SMS-Messenger/app/src/main/res/layout/activity_thread_list.xml -->

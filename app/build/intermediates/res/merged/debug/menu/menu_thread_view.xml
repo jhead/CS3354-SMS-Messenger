@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="cs3354group10.messenger.activities.ThreadViewActivity">
+    <item  android:title="Settings"
+        android:orderInCategory="100" android:showAsAction="never" />
+</menu>
+<!-- From: file:/home/cristianventura/CS3354-SMS-Messenger/app/src/main/res/menu/menu_thread_view.xml -->

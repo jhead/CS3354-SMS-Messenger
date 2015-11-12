@@ -35,12 +35,15 @@ public class ThreadViewBinder implements SimpleCursorAdapter.ViewBinder {
             t.setBackgroundColor(Color.argb(255, 180, 180, 255));
             t.setGravity(Gravity.LEFT);
             t.setMinWidth(10000);
+            
         }
         else{
             t.setBackgroundColor(Color.argb(255, 255, 180, 180));
             t.setGravity(Gravity.RIGHT);
             t.setMinWidth(10000);
         }
+        t.setTextSize(20);
+        t.setMinHeight(100);
         return true;
     }
 }
