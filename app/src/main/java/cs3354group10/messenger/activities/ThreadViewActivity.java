@@ -220,6 +220,11 @@ public class ThreadViewActivity extends ListActivity {
             return;
         }
 
+        if (message == null || message.length() == 0) {
+            Toast.makeText(this,"Message is empty!",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         SmsManager manager = SmsManager.getDefault();
         manager.sendTextMessage(address, null, message, null, null);
 
