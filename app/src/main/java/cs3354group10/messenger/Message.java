@@ -1,6 +1,7 @@
 package cs3354group10.messenger;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 public class Message {
 
@@ -72,12 +73,35 @@ public class Message {
         return this.text;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
     public long getTimestamp() {
         return this.timestamp;
     }
 
     public MessageState getState() {
         return this.state;
+    }
+
+    public boolean isDraft() {
+        return getState().equals(MessageState.DRAFT);
+    }
+
+    public static Message fromCursor(Cursor cursor) {
+        int id = cursor.getInt(cursor.getColumnIndex(DB_COLUMN_NAME_ID));
+
+        String contactText = cursor.getString(cursor.getColumnIndex(DB_COLUMN_NAME_CONTACT));
+        Contact contact = new Contact(contactText);
+
+        String text = cursor.getString(cursor.getColumnIndex(DB_COLUMN_NAME_TEXT));
+
+        MessageState state = MessageState.valueOf(cursor.getInt(cursor.getColumnIndex(DB_COLUMN_NAME_STATE)));
+
+        long timestamp = cursor.getLong(cursor.getColumnIndex(DB_COLUMN_NAME_TIMESTAMP));
+
+        return new Message(id, contact, timestamp, text, state);
     }
 
 }

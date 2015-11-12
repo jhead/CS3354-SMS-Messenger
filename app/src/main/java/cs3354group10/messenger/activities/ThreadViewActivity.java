@@ -203,21 +203,29 @@ public class ThreadViewActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l,v,position,id);
+        super.onListItemClick(l, v, position, id);
+
+        Cursor cursor = listAdapter.getCursor();
+        cursor.moveToPosition(position);
+
+        Message message = Message.fromCursor(cursor);
+        String messageText = message.getText();
+
         switch(state){
             case STATE_NORMAL:
-                //do nothing
+                if (message.isDraft()) {
+                    Intent intent = new Intent(this, EditMessageActivity.class);
+                    intent.putExtra()
+                }
+
                 break;
 
             case STATE_FORWARD:
                 state = STATE_NORMAL;
                 //copy data and move to new activity
-                Cursor cursor = listAdapter.getCursor();
-                cursor.moveToPosition(position);
-                String message = cursor.getString(cursor.getColumnIndex(Message.DB_COLUMN_NAME_TEXT));
-
                 Intent intent = new Intent(this, EditMessageActivity.class);
-                intent.putExtra(FORWARD_MESSAGE, "Fwd: " + message);
+                intent.putExtra(FORWARD_MESSAGE, "Fwd: " + messageText);
+
                 startActivity(intent);
                 break;
         }

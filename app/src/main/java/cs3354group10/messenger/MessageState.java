@@ -6,7 +6,10 @@ public enum MessageState {
     SENT(0),
 
     // A "recv" message is one that the user received from someone else.
-    RECV(1);
+    RECV(1),
+
+    // A "draft" message is one that the user created and saved, but has not yet sent
+    DRAFT(2);
 
     private final int value;
     MessageState(int value) {
@@ -15,6 +18,16 @@ public enum MessageState {
 
     public int getValue() {
         return value;
+    }
+
+    public static MessageState valueOf(int i) {
+        for (MessageState state : MessageState.values()) {
+            if (state.getValue() == i) {
+                return state;
+            }
+        }
+
+        return null;
     }
 
 }

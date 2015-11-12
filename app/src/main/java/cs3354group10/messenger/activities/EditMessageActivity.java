@@ -46,6 +46,9 @@ public class EditMessageActivity extends Activity {
     public static EditMessageActivity activityInstance = null;
     private static boolean active = false;
 
+    public static final String EXTRA_MESSAGE = "EXTRA_MESSAGE";
+    public static final String EXTRA_RECIPIENTS = "EXTRA_RECIPIENTS";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +57,13 @@ public class EditMessageActivity extends Activity {
         activityInstance = this;
 
         Intent intent = getIntent();
-        if (intent.hasExtra(ThreadViewActivity.FORWARD_MESSAGE)){
-            EditText e = (EditText)findViewById(R.id.id_message_field);
-            e.setText(intent.getStringExtra(ThreadViewActivity.FORWARD_MESSAGE), TextView.BufferType.EDITABLE);
+
+        if (intent.hasExtra(EXTRA_MESSAGE)) {
+            setMessageText(intent.getStringExtra(EXTRA_MESSAGE));
+        }
+
+        if (intent.hasExtra(EXTRA_RECIPIENTS)) {
+            setMessageRecipients(intent.getStringExtra(EXTRA_RECIPIENTS));
         }
     }
 
@@ -173,17 +180,61 @@ public class EditMessageActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.action_save:
+                return onActionSave();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean onActionSave() {
+        String messageText = getMessageText();
+        String recipients = getMessageRecipients();
+
+        Contact contact = new Contact(recipients);
+
+        Message draft = new Message(contact, messageText, MessageState.DRAFT);
+        MessageDatabase.insertMessage(this, draft);
+
+        Intent intent = new Intent(this, ThreadListActivity.class);
+        startActivity(intent);
+
+        return true;
+    }
+
+    private EditText getMessageTextField() {
+        return (EditText) findViewById(R.id.id_message_field);
+    }
+
+    private void setMessageText(String text) {
+        getMessageTextField().setText(text, TextView.BufferType.EDITABLE);
+    }
+
+    public String getMessageText() {
+        return getMessageTextField()
+                .getText()
+                .toString()
+                .trim();
+    }
+
+    private EditText getMessageRecipientsField() {
+        return (EditText) findViewById(R.id.id_phone_field);
+    }
+
+    private void setMessageRecipients(String recipients) {
+        getMessageRecipientsField().setText(recipients, TextView.BufferType.EDITABLE);
+    }
+
+    public String getMessageRecipients() {
+        return getMessageRecipientsField()
+                .getText()
+                .toString()
+                .trim();
     }
 
 
@@ -225,10 +276,11 @@ public class EditMessageActivity extends Activity {
         Contact c = new Contact(address[0]);
 
         //stick in database
-        MessageDatabase.insertMessage(getApplicationContext(), new Message(c, message, MessageState.SENT));
+        MessageDatabase.insertMessage(this, new Message(c, message, MessageState.SENT));
 
         //switch activity
         Intent i = new Intent(this,ThreadListActivity.class);
         startActivity(i);
     }
+
 }
