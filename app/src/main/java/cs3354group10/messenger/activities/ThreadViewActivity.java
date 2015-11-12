@@ -123,6 +123,8 @@ public class ThreadViewActivity extends ListActivity {
             setTitle("Forward");
             Button b = (Button)findViewById(R.id.button);
             b.setText("Cancel");
+
+            Toast.makeText(this, "Tap the message you want to forward", Toast.LENGTH_SHORT).show();
             return true;
         }
 
