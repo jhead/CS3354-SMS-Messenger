@@ -81,4 +81,22 @@ public class MessageDatabase {
         return db.insert(Message.DB_TABLE_NAME, null, message.getFields());
     }
 
+    public static int deleteMessage(Context context, String message, String timestamp) {
+        SQLiteDatabase db = getWritableDatabase(context);
+
+        String where = Message.DB_COLUMN_NAME_TEXT + " = ? AND " + Message.DB_COLUMN_NAME_TIMESTAMP + " = ?";
+        String[] whereArgs = {message, timestamp};
+
+        return db.delete(Message.DB_TABLE_NAME, where, whereArgs);
+    }
+
+    public static int deleteThread(Context context, String contact) {
+        SQLiteDatabase db = getWritableDatabase(context);
+
+        String where = Message.DB_COLUMN_NAME_CONTACT + " = ?";
+        String[] whereArgs = {contact};
+
+        return db.delete(Message.DB_TABLE_NAME, where, whereArgs);
+    }
+
 }
