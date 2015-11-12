@@ -53,7 +53,19 @@ public class EditMessageActivity extends Activity {
         activityInstance = this;
     }
 
-
+    public void onClickAddTo(View V){
+        insertNewContact();
+    }
+    public void insertNewContact()
+    {
+        String mobileNumber =(((EditText) findViewById(R.id.id_phone_field)).getText().toString());
+        Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
+        intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE, mobileNumber);
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+        intent.putExtra("finishActivityOnSaveCompleted", true);
+        startActivity(intent);
+    }
 
     public void onClickCancel(View v){
         startActivity(new Intent(cs3354group10.messenger.activities.EditMessageActivity.this, cs3354group10.messenger.activities.ThreadListActivity.class));
