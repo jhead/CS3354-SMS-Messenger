@@ -27,12 +27,12 @@ public class ThreadViewBinder implements SimpleCursorAdapter.ViewBinder {
         int ms = cursor.getInt(cursor.getColumnIndex(Message.DB_COLUMN_NAME_STATE));
 
         if (ms == MessageState.SENT.getValue()) {
-            t.setTextColor(Color.GREEN);
+            t.setTextColor(Color.argb(255,0,128,0));
             t.setGravity(Gravity.RIGHT);
             t.setMinWidth(10000);
         }
         else{
-            t.setTextColor(Color.BLUE);
+            t.setTextColor(Color.argb(255,0,0,128));
             t.setGravity(Gravity.LEFT);
         }
         return true;

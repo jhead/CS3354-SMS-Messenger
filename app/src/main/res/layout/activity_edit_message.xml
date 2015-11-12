@@ -31,15 +31,6 @@
         android:layout_below = "@id/id_phone_field"/>
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cancel"
-        android:id="@+id/cancelButton"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClickCancel" />
-
-    <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,6 +40,15 @@
         android:layout_above="@+id/id_message_field"
         android:layout_alignRight="@+id/id_message_field"
         android:layout_alignEnd="@+id/id_message_field" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add New Contact"
+        android:id="@+id/AddContactButton"
+        android:layout_alignBottom="@+id/id_send_button"
+        android:layout_alignParentStart="true"
+        android:onClick="onClickAddTo" />
 
 
 </RelativeLayout>

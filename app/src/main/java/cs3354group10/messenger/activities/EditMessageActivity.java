@@ -60,7 +60,19 @@ public class EditMessageActivity extends Activity {
         }
     }
 
-
+    public void onClickAddTo(View V){
+        insertNewContact();
+    }
+    public void insertNewContact()
+    {
+        String mobileNumber =(((EditText) findViewById(R.id.id_phone_field)).getText().toString());
+        Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
+        intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE, mobileNumber);
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+        intent.putExtra("finishActivityOnSaveCompleted", true);
+        startActivity(intent);
+    }
 
     public void onClickCancel(View v){
         startActivity(new Intent(cs3354group10.messenger.activities.EditMessageActivity.this, cs3354group10.messenger.activities.ThreadListActivity.class));
@@ -216,6 +228,15 @@ public class EditMessageActivity extends Activity {
     public void onSendPressed(View view){
         String message = ((EditText) findViewById(R.id.id_message_field)).getText().toString();
         String address [] = ((EditText) findViewById(R.id.id_phone_field)).getText().toString().split(";");
+
+        if (message == null || message.length() == 0) {
+            Toast.makeText(this,"Message is empty!",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (address == null || address.length == 0){
+            Toast.makeText(this,"Recipient not selected!",Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         SmsManager manager = SmsManager.getDefault();
         for (String a : address)
