@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import android.provider.ContactsContract.Contacts;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -51,6 +52,12 @@ public class EditMessageActivity extends Activity {
         setContentView(R.layout.activity_edit_message);
 
         activityInstance = this;
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(ThreadViewActivity.FORWARD_MESSAGE)){
+            EditText e = (EditText)findViewById(R.id.id_message_field);
+            e.setText(intent.getStringExtra(ThreadViewActivity.FORWARD_MESSAGE), TextView.BufferType.EDITABLE);
+        }
     }
 
     public void onClickAddTo(View V){
@@ -222,11 +229,18 @@ public class EditMessageActivity extends Activity {
         String message = ((EditText) findViewById(R.id.id_message_field)).getText().toString();
         String address [] = ((EditText) findViewById(R.id.id_phone_field)).getText().toString().split(";");
 
+        if (message == null || message.length() == 0) {
+            Toast.makeText(this,"Message is empty!",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (address == null || address.length == 0){
+            Toast.makeText(this,"Recipient not selected!",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         SmsManager manager = SmsManager.getDefault();
         for (String a : address)
             manager.sendTextMessage(a, null, message, null, null);
-
-        //TODO: check if contact in database and use that contact if it is
 
         address[0] = contactExists(address[0]);
         Contact c = new Contact(address[0]);
@@ -234,8 +248,7 @@ public class EditMessageActivity extends Activity {
         //stick in database
         MessageDatabase.insertMessage(getApplicationContext(), new Message(c, message, MessageState.SENT));
 
-        //TODO: probably switch activity elsewhere
-        //TODO: probably add confirmation for received messages
+        //switch activity
         Intent i = new Intent(this,ThreadListActivity.class);
         startActivity(i);
     }

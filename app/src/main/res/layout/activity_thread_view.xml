@@ -25,14 +25,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/editText"
+            android:id="@+id/threadView_messageEditor"
             android:hint="Enter message here..."/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Send"
-            android:id="@+id/button" />
+            android:id="@+id/button"
+            android:onClick="onSendPressed"/>
     </LinearLayout>
 
 

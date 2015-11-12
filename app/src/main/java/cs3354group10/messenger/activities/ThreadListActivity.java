@@ -75,7 +75,7 @@ public class ThreadListActivity extends ListActivity {
         setContentView(R.layout.activity_thread_list);
 
         activityInstance = this;
-
+        
         loadThreads();
     }
 
@@ -138,8 +138,11 @@ public class ThreadListActivity extends ListActivity {
             activityInstance.loadThreads();
     }
 
-    public void onClick(View v){
+    public void onCreateClick(View v){
         startActivity(new Intent( cs3354group10.messenger.activities.ThreadListActivity.this , cs3354group10.messenger.activities.EditMessageActivity.class ));
+    }
+    public void onSearchClick(View v){
+        startActivity(new Intent( cs3354group10.messenger.activities.ThreadListActivity.this , cs3354group10.messenger.activities.SearchActivity.class ));
     }
 
     @Override
@@ -157,6 +160,12 @@ public class ThreadListActivity extends ListActivity {
         Intent intent = new Intent(this, ThreadViewActivity.class);
         intent.putExtra(THREAD_CONTACT, contactName);
         startActivity(intent);
+    }
+
+
+    public void onClick(View view){
+        Intent i = new Intent(this, EditMessageActivity.class);
+        startActivity(i);
     }
 }
 
