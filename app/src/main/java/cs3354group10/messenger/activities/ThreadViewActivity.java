@@ -106,7 +106,23 @@ public class ThreadViewActivity extends ListActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Message Options");
-        String[] menuItems = {"Delete", "Forward"};
+
+        String[] menuItems;
+
+        int messageIndex = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
+        threadViewCursor.moveToPosition(messageIndex);
+
+        Message message = Message.fromCursor(threadViewCursor);
+
+        Log.d("debug", message.getText());
+        Log.d("debug", message.getState().toString());
+
+        if (message.getState().equals(MessageState.DRAFT)) {
+            menuItems = new String[] { "Delete", "Forward", "Edit Draft" };
+        } else {
+            menuItems = new String[] { "Delete", "Forward" };
+        }
+
         // Add items to menu
         for (int i = 0; i < menuItems.length; i++)
             menu.add(menuItems[i]);
@@ -123,27 +139,41 @@ public class ThreadViewActivity extends ListActivity {
         int messageID = info.position;
         // Point to the message, get the content and delete it
         threadViewCursor.moveToPosition(messageID);
-        String message = threadViewCursor.getString(threadViewCursor.getColumnIndex(Message.DB_COLUMN_NAME_TEXT));
+
+        Message message = Message.fromCursor(threadViewCursor);
+
+        Intent intent;
 
         switch (menuItem) {
             case "Delete":
                 // TODO: Confirm deletion
 
-
                 String timeStamp = threadViewCursor.getString(threadViewCursor.getColumnIndex(Message.DB_COLUMN_NAME_TIMESTAMP));
-                MessageDatabase.deleteMessage(context, message, timeStamp);
+                MessageDatabase.deleteMessage(this, message.getText(), message.getTimestamp());
 
                 // Reload the view and ThreadList
                 loadMessages(this.contact.getName());
                 break;
 
             case "Forward":
-                Intent intent = new Intent(this, EditMessageActivity.class);
-                intent.putExtra(FORWARD_MESSAGE, "Fwd: " + message);
+                intent = new Intent(this, EditMessageActivity.class);
+                intent.putExtra(EditMessageActivity.EXTRA_MESSAGE, message.getText());
                 startActivity(intent);
                 break;
-            default:    // Do nothing
+
+            case "Edit Draft":
+                intent = new Intent(this, EditMessageActivity.class);
+
+                intent.putExtra(EditMessageActivity.EXTRA_RECIPIENTS, message.getContact().getName());
+                intent.putExtra(EditMessageActivity.EXTRA_MESSAGE, message.getText());
+
+                MessageDatabase.deleteDraft(this, message);
+                startActivity(intent);
+                break;
+            default:
+                // Do nothing
         }
+
         return true;
     }
 
