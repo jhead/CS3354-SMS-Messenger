@@ -3,6 +3,7 @@ local.properties
 
 # Binaries
 build/
+app/build/
 
 # Local gradle data
 .gradle/
