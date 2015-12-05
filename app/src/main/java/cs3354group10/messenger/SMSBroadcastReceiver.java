@@ -20,9 +20,9 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
 
 
     /**
-     * onReceive
-     * receives broadcasts, only accepts SMS broadcast
-     * @param context
+     * receives broadcasts, only accepts SMS broadcasts.
+     * Requires SMS receive permission.
+     * @param context   not used
      * @param intent
      */
     @Override
@@ -51,6 +51,13 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
         ThreadViewActivity.updateMessages();
     }
 
+    /**
+     * Searches the phone's contacts to see if a contact with the given number exists
+     * If one isf found, the name is returned.  Otherwise, number is returned
+     * @param number    number used to query contacts
+     * @param context   context called from
+     * @return          contact name or number if not found
+     */
     private String contactExists( String number,Context context) {
 /// number is the phone number
         Uri lookupUri = Uri.withAppendedPath(

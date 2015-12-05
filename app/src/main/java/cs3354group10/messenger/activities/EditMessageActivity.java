@@ -35,9 +35,8 @@ import group10.cs3354.sms_messenger.R;
 
 /**
  * EditMessageActivity
- * Probably either replaced entirely by ThreadViewActivity to allow sending and viewing messages at same time,
- * or add similar functionality to ThreadViewActivity.
- * In that case, use this for composing messages not yet part of a thread.
+ * Basic message editing activity with sending capability.
+ * Allows editing recipient, choosing recipient by contact, and editing messages.
  */
 public class EditMessageActivity extends Activity {
 
@@ -49,6 +48,12 @@ public class EditMessageActivity extends Activity {
     public static final String EXTRA_MESSAGE = "EXTRA_MESSAGE";
     public static final String EXTRA_RECIPIENTS = "EXTRA_RECIPIENTS";
 
+    /**
+     * Overriden create function
+     * Accepts {@link Bundle} which may contain extras for forwarded messsages.
+     * When forwarding, Bundle should contain EXTRA_MESSAGE and EXTRA_RECIPIENTS
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,21 +166,28 @@ public class EditMessageActivity extends Activity {
     }
 
 
-
-
-
+    /**
+     * Overriden onResume
+     * Marks the activity as active
+     */
     @Override
     protected void onResume(){
         super.onResume();
         active = true;
     }
 
+    /**
+     * Marks the activity as inactive
+     */
     @Override
     protected void onPause(){
         super.onPause();
         active = false;
     }
 
+    /**
+     * Marks the activity as inactive and removes the static reference to itself
+     */
     @Override
     protected void onDestroy(){
         super.onDestroy();
@@ -217,6 +229,15 @@ public class EditMessageActivity extends Activity {
         return true;
     }
 
+
+    /**
+     * Creates a new {@link Message} using the information passed in.
+     * On failure, notifies user with a {@link Toast} and returns null.
+     * @param recipients    String containing phone numbers of recipients
+     * @param messageText   String containing message content
+     * @param state         Whether message is sent, received, or draft
+     * @return              new {@link Message}, or null on failure
+     */
     private Message createMessage(String recipients, String messageText, MessageState state) {
         if (messageText == null || messageText.length() == 0) {
             Toast.makeText(this,"Message is empty!",Toast.LENGTH_SHORT).show();
@@ -244,14 +265,28 @@ public class EditMessageActivity extends Activity {
         return new Message(contact, messageText, state);
     }
 
+
+    /**
+     * returns the {@link EditText} used for message editing
+     * @return  message EditText
+     */
     private EditText getMessageTextField() {
         return (EditText) findViewById(R.id.id_message_field);
     }
 
+    /**
+     * Sets the content of the message {@link EditText}
+     * @param text  String used to set the message
+     */
     private void setMessageText(String text) {
         getMessageTextField().setText(text, TextView.BufferType.EDITABLE);
     }
 
+
+    /**
+     * Obtains the conent of the message from the message {@link EditText}
+     * @return  message contained in EditText
+     */
     public String getMessageText() {
         return getMessageTextField()
                 .getText()
@@ -259,14 +294,26 @@ public class EditMessageActivity extends Activity {
                 .trim();
     }
 
+    /**
+     * Returns the {@link EditText} containing the recipient data
+     * @return  EditText with recipient data
+     */
     private EditText getMessageRecipientsField() {
         return (EditText) findViewById(R.id.id_phone_field);
     }
 
+    /**
+     * Sets the contents of the {@link EditText} for recipients
+     * @param recipients    String used for the EditText
+     */
     private void setMessageRecipients(String recipients) {
         getMessageRecipientsField().setText(recipients, TextView.BufferType.EDITABLE);
     }
 
+    /**
+     * Obtains the recipient phone numbers from the {@link EditText} as a String
+     * @return  phone numbers of recipients
+     */
     public String getMessageRecipients() {
         return getMessageRecipientsField()
                 .getText()
@@ -275,8 +322,7 @@ public class EditMessageActivity extends Activity {
     }
 
     /**
-     * onSendPressed
-     * sends the message, multiple contacts indicated by splitting with ';'
+     * Obtains the recipient and message content and sends the message.
      * @param view Not used
      */
     public void onSendPressed(View view){

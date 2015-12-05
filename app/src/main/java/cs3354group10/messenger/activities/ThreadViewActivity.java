@@ -55,12 +55,18 @@ public class ThreadViewActivity extends ListActivity {
         loadMessages(contact.getName());
     }
 
+    /**
+     * Marks the activity as inactive.
+     */
     @Override
     protected void onPause(){
         super.onPause();
         active = false;
     }
 
+    /**
+     * Marks the activity as active and reloads the messages.
+     */
     @Override
     protected void onResume(){
         super.onResume();
@@ -68,6 +74,9 @@ public class ThreadViewActivity extends ListActivity {
         loadMessages(this.contact.getName());
     }
 
+    /**
+     * Refreshes messages
+     */
     public static void updateMessages(){
         if (active)
             instance.loadMessages(instance.contact.getName());

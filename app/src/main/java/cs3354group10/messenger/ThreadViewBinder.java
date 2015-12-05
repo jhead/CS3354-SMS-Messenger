@@ -4,22 +4,30 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 
 /**
- * ThreadViewBinder
- * Defines method to visually organize texts by sender in ThreadViewActivity
- * Created by Satsuki on 11/10/2015.
+ * Defines method to visually organize texts by sender in {@link cs3354group10.messenger.activities.ThreadViewActivity}.
+ * Changes background and orientation of {@link TextView} depending on sender or draft status.
+ * @see cs3354group10.messenger.activities.ThreadViewActivity
+ * @see SimpleCursorAdapter
+ * @see SimpleCursorAdapter.ViewBinder
  */
 public class ThreadViewBinder implements SimpleCursorAdapter.ViewBinder {
     public ThreadViewBinder(){
         super();
     }
 
+    /**
+     * Sets the {@link TextView}s in {@link cs3354group10.messenger.activities.ThreadViewActivity} to have custom color
+     * and orientation.
+     * @param view          TextView that will be modified
+     * @param cursor        Cursor containing message nformation
+     * @param columnIndex   Not used
+     * @return  returns true
+     */
     public boolean setViewValue (View view, Cursor cursor, int columnIndex){
         TextView t = (TextView) view;
         t.setText(cursor.getString(cursor.getColumnIndex(Message.DB_COLUMN_NAME_TEXT)));
