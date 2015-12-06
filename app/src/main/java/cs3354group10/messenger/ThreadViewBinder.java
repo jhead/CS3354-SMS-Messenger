@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 /**
  * Defines method to visually organize texts by sender in {@link cs3354group10.messenger.activities.ThreadViewActivity}.
- * Changes background and orientation of {@link TextView} depending on sender or draft status.
+ * Changes background and orientation of {@link android.widget.TextView} depending on sender or draft status.
  * @see cs3354group10.messenger.activities.ThreadViewActivity
- * @see SimpleCursorAdapter
- * @see SimpleCursorAdapter.ViewBinder
+ * @see android.widget.SimpleCursorAdapter
+ * @see android.widget.SimpleCursorAdapter.ViewBinder
  */
 public class ThreadViewBinder implements SimpleCursorAdapter.ViewBinder {
     public ThreadViewBinder(){
@@ -21,7 +21,7 @@ public class ThreadViewBinder implements SimpleCursorAdapter.ViewBinder {
     }
 
     /**
-     * Sets the {@link TextView}s in {@link cs3354group10.messenger.activities.ThreadViewActivity} to have custom color
+     * Sets the {@link android.widget.TextView}s in {@link cs3354group10.messenger.activities.ThreadViewActivity} to have custom color
      * and orientation.
      * @param view          TextView that will be modified
      * @param cursor        Cursor containing message nformation

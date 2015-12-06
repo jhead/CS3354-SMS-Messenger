@@ -50,7 +50,7 @@ public class EditMessageActivity extends Activity {
 
     /**
      * Overriden create function
-     * Accepts {@link Bundle} which may contain extras for forwarded messsages.
+     * Accepts {@link android.os.Bundle} which may contain extras for forwarded messsages.
      * When forwarding, Bundle should contain EXTRA_MESSAGE and EXTRA_RECIPIENTS
      * @param savedInstanceState
      */
@@ -284,7 +284,7 @@ public class EditMessageActivity extends Activity {
 
 
     /**
-     * Obtains the conent of the message from the message {@link EditText}
+     * Obtains the content of the message from the message {@link android.widget.EditText}
      * @return  message contained in EditText
      */
     public String getMessageText() {
@@ -311,7 +311,7 @@ public class EditMessageActivity extends Activity {
     }
 
     /**
-     * Obtains the recipient phone numbers from the {@link EditText} as a String
+     * Obtains the recipient phone numbers from the {@link android.widget.EditText} as a String
      * @return  phone numbers of recipients
      */
     public String getMessageRecipients() {
