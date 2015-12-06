@@ -56,6 +56,12 @@ public class MessageDatabase {
         return db.query(Message.DB_TABLE_NAME, Message.DB_COLUMNS, selection, selectionArgs, null, null, orderBy);
     }
 
+    /**
+     * Query the database for a specific substring contained in a message
+     * @param context
+     * @param searchStr Substring used to query the database
+     * @return A cursor to iterate the list of found matches
+     */
     public static Cursor queryMessagesForString(Context context, String searchStr) {
         SQLiteDatabase db = getReadableDatabase(context);
 
