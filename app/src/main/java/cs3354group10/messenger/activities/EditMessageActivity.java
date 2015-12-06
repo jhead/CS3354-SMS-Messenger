@@ -2,7 +2,6 @@ package cs3354group10.messenger.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,11 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import android.provider.ContactsContract.Contacts;
@@ -34,7 +31,6 @@ import group10.cs3354.sms_messenger.R;
 
 
 /**
- * EditMessageActivity
  * Basic message editing activity with sending capability.
  * Allows editing recipient, choosing recipient by contact, and editing messages.
  */
@@ -42,16 +38,31 @@ public class EditMessageActivity extends Activity {
 
     String DEBUG_TAG = "CS3354-SMS-Messenger";
 
+    /**
+     * Reference to instance of activity.
+     * Used to call member functions from other classes
+     */
     public static EditMessageActivity activityInstance = null;
+    /**
+     * If activity is currently visible
+     */
     private static boolean active = false;
 
+    /**
+     * String for describing Extras when forwarding messages.
+     * Associated Extra should contain message content.
+     */
     public static final String EXTRA_MESSAGE = "EXTRA_MESSAGE";
+    /**
+     * String for describing Extras when forwarding messages.
+     * Associated Extra should contain recipient phone numbers.
+     */
     public static final String EXTRA_RECIPIENTS = "EXTRA_RECIPIENTS";
 
     /**
      * Overriden create function
-     * Accepts {@link android.os.Bundle} which may contain extras for forwarded messsages.
-     * When forwarding, Bundle should contain EXTRA_MESSAGE and EXTRA_RECIPIENTS
+     * Accepts Bundle which may contain extras for forwarded messsages.
+     * When forwarding a message, Bundle should contain EXTRA_MESSAGE and EXTRA_RECIPIENTS
      * @param savedInstanceState
      */
     @Override
@@ -232,7 +243,7 @@ public class EditMessageActivity extends Activity {
 
     /**
      * Creates a new {@link Message} using the information passed in.
-     * On failure, notifies user with a {@link Toast} and returns null.
+     * On failure, notifies user with a Toast and returns null.
      * @param recipients    String containing phone numbers of recipients
      * @param messageText   String containing message content
      * @param state         Whether message is sent, received, or draft
@@ -267,7 +278,7 @@ public class EditMessageActivity extends Activity {
 
 
     /**
-     * returns the {@link EditText} used for message editing
+     * returns the EditText used for message editing
      * @return  message EditText
      */
     private EditText getMessageTextField() {
@@ -275,7 +286,7 @@ public class EditMessageActivity extends Activity {
     }
 
     /**
-     * Sets the content of the message {@link EditText}
+     * Sets the content of the message EditText
      * @param text  String used to set the message
      */
     private void setMessageText(String text) {
@@ -284,7 +295,7 @@ public class EditMessageActivity extends Activity {
 
 
     /**
-     * Obtains the content of the message from the message {@link android.widget.EditText}
+     * Obtains the content of the message from the message EditText
      * @return  message contained in EditText
      */
     public String getMessageText() {
@@ -295,7 +306,7 @@ public class EditMessageActivity extends Activity {
     }
 
     /**
-     * Returns the {@link EditText} containing the recipient data
+     * Returns the EditText containing the recipient data
      * @return  EditText with recipient data
      */
     private EditText getMessageRecipientsField() {
@@ -303,7 +314,7 @@ public class EditMessageActivity extends Activity {
     }
 
     /**
-     * Sets the contents of the {@link EditText} for recipients
+     * Sets the contents of the EditText for recipients
      * @param recipients    String used for the EditText
      */
     private void setMessageRecipients(String recipients) {
@@ -311,7 +322,7 @@ public class EditMessageActivity extends Activity {
     }
 
     /**
-     * Obtains the recipient phone numbers from the {@link android.widget.EditText} as a String
+     * Obtains the recipient phone numbers from the EditText as a String
      * @return  phone numbers of recipients
      */
     public String getMessageRecipients() {

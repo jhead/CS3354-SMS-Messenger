@@ -14,6 +14,10 @@ import cs3354group10.messenger.activities.ThreadListActivity;
 import cs3354group10.messenger.activities.ThreadViewActivity;
 import cs3354group10.messenger.db.MessageDatabase;
 
+/**
+ * Broadcast receiver used to catch all incoming SMS messages.
+ * Action is dependant on current active activity.
+ */
 public class SMSBroadcastReceiver extends BroadcastReceiver {
     public SMSBroadcastReceiver() {
     }
@@ -23,7 +27,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
      * receives broadcasts, only accepts SMS broadcasts.
      * Requires SMS receive permission.
      * @param context   not used
-     * @param intent
+     * @param intent    contains message information
      */
     @Override
     public void onReceive(Context context, Intent intent) {
