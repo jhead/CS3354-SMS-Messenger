@@ -10,14 +10,37 @@ import cs3354group10.messenger.MessageState;
 
 public class MessageDatabase {
 
+    /**
+     * Provides an SQLiteOpenHelper given the specified context.
+     *
+     * @param context Current activity or application context
+     * @return MessageDatabaseHelper instance
+     */
     protected static SQLiteOpenHelper getDatabaseHelper(Context context) {
         return MessageDatabaseHelper.getInstance(context);
     }
 
+
+    /**
+     * Get a database connection/instance for reading.
+     *
+     * If the connection has not been established, it will at the time of call (lazy loaded).
+     *
+     * @param context
+     * @return
+     */
     protected static SQLiteDatabase getReadableDatabase(Context context) {
         return getDatabaseHelper(context).getReadableDatabase();
     }
 
+    /**
+     * Get a database connection/instance for writing.
+     *
+     * If the connection has not been established, it will at the time of call (lazy loaded).
+     *
+     * @param context
+     * @return
+     */
     protected static SQLiteDatabase getWritableDatabase(Context context) {
         return getDatabaseHelper(context).getWritableDatabase();
     }
@@ -26,7 +49,7 @@ public class MessageDatabase {
      * Query the database to build a list of message threads, including each contact name and the
      * text from the latest message from that contact.
      *
-     * @param context
+     * @param context Current activity or application context
      * @return A cursor to iterate the list of threads
      */
     public static Cursor queryThreads(Context context) {
@@ -41,7 +64,7 @@ public class MessageDatabase {
     /**
     * Query the database for a list of messages by a specific contact.
     *
-    * @param context
+     * @param context Current activity or application context
     * @param contact Messages between the user and this contact will be returned.
     * @return A cursor to iterate the list of messages.
     */
@@ -58,7 +81,7 @@ public class MessageDatabase {
 
     /**
      * Query the database for a specific substring contained in a message
-     * @param context
+     * @param context Current activity or application context
      * @param searchStr Substring used to query the database
      * @return A cursor to iterate the list of found matches
      */
@@ -78,7 +101,7 @@ public class MessageDatabase {
     /**
      * Inserts a new message into the database
      *
-     * @param context
+     * @param context Current activity or application context
      * @param message Message to be inserted
      * @return ID of the new row
      */
@@ -97,6 +120,13 @@ public class MessageDatabase {
         return db.delete(Message.DB_TABLE_NAME, where, whereArgs);
     }
 
+    /**
+     * Deletes a message thread and all related messages by the specified contact.
+     *
+     * @param context Current activity or application context
+     * @param contact Contact to match messages with
+     * @return
+     */
     public static int deleteThread(Context context, String contact) {
         SQLiteDatabase db = getWritableDatabase(context);
 
@@ -106,6 +136,13 @@ public class MessageDatabase {
         return db.delete(Message.DB_TABLE_NAME, where, whereArgs);
     }
 
+    /**
+     * Delete message draft by message text.
+     *
+     * @param context Current activity or application context
+     * @param message Message text to match messages with
+     * @return
+     */
     public static int deleteDraft(Context context, Message message) {
         SQLiteDatabase db = getWritableDatabase(context);
 
