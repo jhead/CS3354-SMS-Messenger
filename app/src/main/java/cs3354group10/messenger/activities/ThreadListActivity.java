@@ -20,6 +20,7 @@ import java.util.HashMap;
 
 import cs3354group10.messenger.Message;
 import cs3354group10.messenger.db.MessageDatabase;
+import group10.cs3354.sms_messenger.R;
 
 
 public class ThreadListActivity extends ListActivity {
