@@ -26,6 +26,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
     /**
      * receives broadcasts, only accepts SMS broadcasts.
      * Requires SMS receive permission.
+     * Updates messages visible in {@link cs3354group10.messenger.activities.ThreadListActivity} and {@link cs3354group10.messenger.activities.ThreadViewActivity}
      * @param context   not used
      * @param intent    contains message information
      */
@@ -63,7 +64,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
      * @return          contact name or number if not found
      */
     private String contactExists( String number,Context context) {
-/// number is the phone number
+        /// number is the phone number
         Uri lookupUri = Uri.withAppendedPath(
                 ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(number));

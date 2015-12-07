@@ -76,6 +76,9 @@ public class ThreadListActivity extends ListActivity {
         loadThreads();
     }
 
+    /**
+     * Set activity inactive and remove reference to self
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -114,6 +117,9 @@ public class ThreadListActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Marks the activity as active.
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -122,6 +128,9 @@ public class ThreadListActivity extends ListActivity {
     }
 
 
+    /**
+     * Marks the activity as inactive
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -129,7 +138,6 @@ public class ThreadListActivity extends ListActivity {
     }
 
     /**
-     * updateThreads
      * called by SMSBroadcastReceiver on receiving a message to refresh display
      */
     public static void updateThreads() {

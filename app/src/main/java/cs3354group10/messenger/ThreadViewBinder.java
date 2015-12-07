@@ -24,7 +24,7 @@ public class ThreadViewBinder implements SimpleCursorAdapter.ViewBinder {
      * @param view          TextView that will be modified
      * @param cursor        Cursor containing message nformation
      * @param columnIndex   Not used
-     * @return  returns true
+     * @return  returns true on success
      */
     public boolean setViewValue (View view, Cursor cursor, int columnIndex){
         TextView t = (TextView) view;
