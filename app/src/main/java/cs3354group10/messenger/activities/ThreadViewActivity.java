@@ -4,9 +4,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -27,6 +25,10 @@ import cs3354group10.messenger.db.MessageDatabase;
 import group10.cs3354.sms_messenger.R;
 
 
+/**
+ * Activity to view sent/received messages from a contact and reply to them.
+ * Also allows deleting, forwarding messages and saving drafts.
+ */
 public class ThreadViewActivity extends ListActivity {
 
     private SimpleCursorAdapter listAdapter;
@@ -37,9 +39,16 @@ public class ThreadViewActivity extends ListActivity {
     private static ThreadViewActivity instance = null;
     private static boolean active = false;
 
+    /**
+     * Name of extra data, which is the message to forward, to send to forward message activity
+     */
     public static final String FORWARD_MESSAGE = "Message to forward";
     private Cursor threadViewCursor;
 
+
+    /**
+     * Overridden method to load messages for a contact on creating the activity.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +92,11 @@ public class ThreadViewActivity extends ListActivity {
     }
 
 
+    /**
+     * Find contact. If contact is not found, create a new contact.
+     * @param name Contact's name to find
+     * @return contact in list or new contact
+     */
     private Contact findContact(String name){
         for(Contact contact : Contact.contactList){
             if (contact.getName().equals(name)){
@@ -93,6 +107,10 @@ public class ThreadViewActivity extends ListActivity {
         return new Contact(name);
     }
 
+    /**
+     * Query the messages from the database and display them.
+     * @param contact contact to query messages from
+     */
     protected void loadMessages(String contact) {
         Context context = getApplicationContext();
         threadViewCursor = MessageDatabase.queryMessages(context, contact);
@@ -112,6 +130,11 @@ public class ThreadViewActivity extends ListActivity {
             registerForContextMenu(getListView());
     }
 
+
+    /**
+     * Overridden method to create a context menu, allows
+     * deleting, forwarding messages and editing draft.
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Message Options");
@@ -137,6 +160,11 @@ public class ThreadViewActivity extends ListActivity {
             menu.add(menuItems[i]);
     }
 
+    /**
+     * Overridden method.
+     * Actions to take after choosing the menu from the context menu.
+     * Decide if the menu selected is "delete", "forward" or "edit draft"
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         String menuItem = (String) item.getTitle();
@@ -218,6 +246,9 @@ public class ThreadViewActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Method to send message and stick the sent message to database
+     */
     public void onSendPressed(View view){
         String message = ((EditText) findViewById(R.id.threadView_messageEditor)).getText().toString();
 
