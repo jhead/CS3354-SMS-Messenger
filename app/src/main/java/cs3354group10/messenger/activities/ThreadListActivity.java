@@ -22,13 +22,15 @@ import cs3354group10.messenger.Message;
 import cs3354group10.messenger.db.MessageDatabase;
 import group10.cs3354.sms_messenger.R;
 
-
+/**
+ * Provides a list of messages grouped into "threads" by contact, sorted by newest to oldest
+ * messages (top to bottom). User can select threads to view and drafts to edit, and can delete
+ * entire threads at once.
+ */
 public class ThreadListActivity extends ListActivity {
 
-
     public final static String THREAD_CONTACT = "Contact name will be stored here by intent";
-    // Key to query the extra data
-//    public final static String CONTACT = "cs3354group10.messenger.activities.CONTACT";
+
     private static boolean active = false;
     private static ThreadListActivity activityInstance;
 

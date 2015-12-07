@@ -8,6 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import cs3354group10.messenger.Message;
 import cs3354group10.messenger.MessageState;
 
+/**
+ * Abstracts the SQLite database functionality and provides easy to use methods for manipulating
+ * the message database/storage.
+ *
+ * @see cs3354group10.messenger.db.MessageDatabaseHelper
+ */
 public class MessageDatabase {
 
     /**

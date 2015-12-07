@@ -6,9 +6,22 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import cs3354group10.messenger.Message;
 
+/**
+ * SQLiteOpenHelper instance required to work with SQLite databases.
+ *
+ * @see cs3354group10.messenger.db.MessageDatabase
+ * @see android.database.sqlite.SQLiteOpenHelper
+ */
 public class MessageDatabaseHelper extends SQLiteOpenHelper {
 
+    /**
+     * Current database schema version.
+     */
     public static final int DATABASE_VERSION = 1;
+
+    /**
+     * Path to SQLite database file.
+     */
     public static final String DATABASE_PATH = "Messenger.db";
 
     private static MessageDatabaseHelper instance;
@@ -52,6 +65,13 @@ public class MessageDatabaseHelper extends SQLiteOpenHelper {
         );
     }
 
+    /**
+     * Currently unused.
+     *
+     * @param db
+     * @param oldVersion
+     * @param newVersion
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO
