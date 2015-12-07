@@ -20,7 +20,6 @@ import java.util.HashMap;
 
 import cs3354group10.messenger.Message;
 import cs3354group10.messenger.db.MessageDatabase;
-import group10.cs3354.sms_messenger.R;
 
 
 public class ThreadListActivity extends ListActivity {
@@ -43,6 +42,15 @@ public class ThreadListActivity extends ListActivity {
 
     private SimpleCursorAdapter listAdapter;
 
+    /**
+     * Creates the CursorAdapter necessary to map message threads from the database to this ListActivity.
+     *
+     * @param activity Current activity (ListActivity)
+     * @param listItemLayout List layout ID
+     * @param cursor Database query result cursor
+     * @param flags SimpleCursorAdapter flags
+     * @return
+     */
     private static CursorAdapter createCursorAdapter(ThreadListActivity activity, int listItemLayout, Cursor cursor, int flags) {
         Collection<String> keys = listValueMap.keySet();
 
@@ -66,6 +74,11 @@ public class ThreadListActivity extends ListActivity {
         );
     }
 
+    /**
+     * Activity create event. Initializes activity and loads threads.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +90,7 @@ public class ThreadListActivity extends ListActivity {
     }
 
     /**
-     * Set activity inactive and remove reference to self
+     * Set activity inactive and remove reference to self.
      */
     @Override
     protected void onDestroy() {
@@ -86,6 +99,9 @@ public class ThreadListActivity extends ListActivity {
         active = false;
     }
 
+    /**
+     * Loads message threads from database into adapter and updates the list displayed on-screen.
+     */
     protected void loadThreads() {
         Context context = getApplicationContext();
         Cursor threadListCursor = MessageDatabase.queryThreads(context);
@@ -95,6 +111,12 @@ public class ThreadListActivity extends ListActivity {
         registerForContextMenu(getListView());
     }
 
+    /**
+     * Creates the options menu for this activity.
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -102,6 +124,14 @@ public class ThreadListActivity extends ListActivity {
         return true;
     }
 
+    /**
+     * Handles options menu item selection event.
+     *
+     * Handled internally by Android.
+     *
+     * @param item Selected item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -129,7 +159,7 @@ public class ThreadListActivity extends ListActivity {
 
 
     /**
-     * Marks the activity as inactive
+     * Marks the activity as inactive.
      */
     @Override
     protected void onPause() {
@@ -138,20 +168,39 @@ public class ThreadListActivity extends ListActivity {
     }
 
     /**
-     * called by SMSBroadcastReceiver on receiving a message to refresh display
+     * Called by SMSBroadcastReceiver on receiving a message to refresh display.
      */
     public static void updateThreads() {
         if (active)
             activityInstance.loadThreads();
     }
 
+    /**
+     * Called when "Create Message" button is clicked.
+     *
+     * @param v
+     */
     public void onCreateClick(View v){
         startActivity(new Intent( cs3354group10.messenger.activities.ThreadListActivity.this , cs3354group10.messenger.activities.EditMessageActivity.class ));
     }
+
+    /**
+     * Called when "Search" button is clicked.
+     *
+     * @param v
+     */
     public void onSearchClick(View v){
         startActivity(new Intent( cs3354group10.messenger.activities.ThreadListActivity.this , cs3354group10.messenger.activities.SearchActivity.class ));
     }
 
+    /**
+     * Called when a thread in the list is clicked.
+     *
+     * @param l Current activity (ListView/ThreadListActivity)
+     * @param v
+     * @param position Position in list of clicked item
+     * @param id
+     */
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -169,13 +218,13 @@ public class ThreadListActivity extends ListActivity {
         startActivity(intent);
     }
 
-
-
-    public void onClick(View view) {
-        Intent i = new Intent(this, EditMessageActivity.class);
-        startActivity(i);
-    }
-
+    /**
+     * Initializes context (hold) menu, primarily for deleting message threads.
+     *
+     * @param menu ContextMenu instance
+     * @param v
+     * @param menuInfo
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Options");
@@ -185,6 +234,14 @@ public class ThreadListActivity extends ListActivity {
             menu.add(menuItems[i]);
     }
 
+    /**
+     * Called when the "Delete" context menu button is selected.
+     *
+     * The only button available is the "Delete" button.
+     *
+     * @param item Selected menu item
+     * @return
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         String menuItem = (String) item.getTitle();
