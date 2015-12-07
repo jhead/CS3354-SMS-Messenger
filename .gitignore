@@ -1,6 +1,9 @@
 CS3354-SMS-Messenger.iml
 local.properties
 
+# Docs
+Javadoc/
+javadoc/
 
 # Binaries
 build/
