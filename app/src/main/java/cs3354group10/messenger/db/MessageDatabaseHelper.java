@@ -20,7 +20,7 @@ public class MessageDatabaseHelper extends SQLiteOpenHelper {
     /**
      * MessageDatabaseHelper singleton
      *
-     * @param context via getContext() within the activity
+     * @param context Current activity or application context
      * @return an instance of MessageDatabaseHelper
      */
     public static MessageDatabaseHelper getInstance(Context context) {
@@ -31,6 +31,13 @@ public class MessageDatabaseHelper extends SQLiteOpenHelper {
         return instance;
     }
 
+    /**
+     * Sets up the SQLite database schema for new databases.
+     *
+     * Do not explicitly call this method. It is handled internally.
+     *
+     * @param db
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create messages table
