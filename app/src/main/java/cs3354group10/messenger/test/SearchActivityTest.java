@@ -35,7 +35,7 @@ public class SearchActivityTest extends ActivityInstrumentationTestCase2<SearchA
     }
 
     protected void tearDown() {
-        getContext().deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
+        DatabaseTest.deleteDatabase(testActivity.getApplicationContext());
     }
 
     public void testMessageSearch() {
@@ -49,8 +49,8 @@ public class SearchActivityTest extends ActivityInstrumentationTestCase2<SearchA
         assertTrue("The substring 'other' exists in some message",
                 testActivity.searchMessages("other"));
 
-        assertTrue("The substring 'Brendan' exists in some message (should fail)",
-                testActivity.searchMessages("Brendan"));
+        assertTrue("The substring 'Test' exists in some message",
+                testActivity.searchMessages("Test"));
     }
 
 }
