@@ -260,6 +260,7 @@ public class EditMessageActivity extends Activity {
             return null;
         }
 
+        //not used but would allow multiple recipients if support added elsewhere
         String[] addresses = recipients.split(";");
         recipients = "";
 
