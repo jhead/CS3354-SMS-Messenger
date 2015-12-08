@@ -98,7 +98,7 @@ public class ThreadViewActivity extends ListActivity {
      * @return contact in list or new contact
      */
     private Contact findContact(String name){
-        for(Contact contact : Contact.contactList){
+        for(Contact contact : Contact.getContacts()){
             if (contact.getName().equals(name)){
                 return contact;
             }

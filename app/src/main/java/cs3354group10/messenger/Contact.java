@@ -23,6 +23,10 @@ public class Contact {
         contactList.add(this);
     }
 
+    public static ArrayList<Contact> getContacts() {
+        return new ArrayList<>(contactList);
+    }
+
     /**
      * Provides the contact name.
      * @return Contact name
