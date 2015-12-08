@@ -280,7 +280,7 @@ public class EditMessageActivity extends Activity {
      * @param state         Whether message is sent, received, or draft
      * @return              new {@link Message}, or null on failure
      */
-    private Message createMessage(String recipients, String messageText, MessageState state) {
+    public Message createMessage(String recipients, String messageText, MessageState state) {
         if (messageText == null || messageText.length() == 0) {
             Toast.makeText(this,"Message is empty!",Toast.LENGTH_SHORT).show();
             return null;
