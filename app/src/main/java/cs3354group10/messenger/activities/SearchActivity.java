@@ -44,6 +44,9 @@ public class SearchActivity extends ListActivity {
 
     private Cursor messageResultCursor;
 
+    private Context context;
+    private static Boolean result = true;
+
     /**
      * Sets up the listener for the search button, and adds the functionality for the user to
      * enter search text in the editText field.
@@ -75,26 +78,36 @@ public class SearchActivity extends ListActivity {
      * @param searchStr The string to be queried for
      * @return Returns a boolean based on whether or not the search is found.
      */
-    private boolean searchMessages(String searchStr){
+    public boolean searchMessages(final String searchStr){
+        context = getApplicationContext();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //DEBUG MESSAGES
+                //this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
+
+                messageResultCursor = MessageDatabase.queryMessagesForString(context, searchStr);
+
+                if (messageResultCursor.getCount() > 0) {
+                    listAdapter = new SimpleCursorAdapter(context, R.layout.search_list_item, messageResultCursor,
+                            fromColumn, toView, 0);
+
+                    setListAdapter(listAdapter);
+                }
+                else{
+                    setListAdapter(null);
+                    result = false;
+                }
+
+                result = true;
 
 
+            }
+        });
 
-        //DEBUG MESSAGES
-        //this.deleteDatabase(MessageDatabaseHelper.DATABASE_PATH);
-        Context context = getApplicationContext();
-        messageResultCursor = MessageDatabase.queryMessagesForString(context, searchStr);
+        return result;
 
-        if (messageResultCursor.getCount() > 0) {
-            listAdapter = new SimpleCursorAdapter(this, R.layout.search_list_item, messageResultCursor,
-                    fromColumn, toView, 0);
-
-            setListAdapter(listAdapter);
-        }
-        else{
-            setListAdapter(null);
-        }
-
-        return true;
     }
 
     /**

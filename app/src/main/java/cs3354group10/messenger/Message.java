@@ -3,6 +3,10 @@ package cs3354group10.messenger;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+/**
+ * Provides a basic object for storing Message data in memory and for converting from a database
+ * Cursor to a new Message object, for display and use on-screen and in Activity classes.
+ */
 public class Message {
 
     public static final String DB_TABLE_NAME = "messages";
@@ -12,6 +16,9 @@ public class Message {
     public static final String DB_COLUMN_NAME_TEXT = "text";
     public static final String DB_COLUMN_NAME_STATE = "state";
 
+    /**
+     * SQLite message table columns
+     */
     public static final String[] DB_COLUMNS = {
             DB_COLUMN_NAME_ID,
             DB_COLUMN_NAME_CONTACT,
@@ -89,6 +96,13 @@ public class Message {
         return getState().equals(MessageState.DRAFT);
     }
 
+    /**
+     * Creates a new Message from an SQLite database Cursor by reading each individual column
+     * and assigning the the values to the new Message object appropriately.
+     *
+     * @param cursor SQLite database Cursor object from a MessageDatabase query
+     * @return The resulting Message object
+     */
     public static Message fromCursor(Cursor cursor) {
         int id = cursor.getInt(cursor.getColumnIndex(DB_COLUMN_NAME_ID));
 

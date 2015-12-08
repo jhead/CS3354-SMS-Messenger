@@ -10,7 +10,6 @@ import cs3354group10.messenger.Message;
  * SQLiteOpenHelper instance required to work with SQLite databases.
  *
  * @see cs3354group10.messenger.db.MessageDatabase
- * @see android.database.sqlite.SQLiteOpenHelper
  */
 public class MessageDatabaseHelper extends SQLiteOpenHelper {
 

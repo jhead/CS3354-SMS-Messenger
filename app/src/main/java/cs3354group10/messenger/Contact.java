@@ -7,11 +7,15 @@ import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 
+/**
+ * Provides a basic object for storing contact details in memory while rendering threads and
+ * messages on-screen.
+ */
 public class Contact {
 
     protected String name;
-    public static ArrayList<Contact> contactList = new ArrayList<>();
 
+    protected static ArrayList<Contact> contactList = new ArrayList<>();
 
     // TODO: additional contact information
     public Contact(String name) {
@@ -19,10 +23,26 @@ public class Contact {
         contactList.add(this);
     }
 
+    public static ArrayList<Contact> getContacts() {
+        return new ArrayList<>(contactList);
+    }
+
+    /**
+     * Provides the contact name.
+     * @return Contact name
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Translates a phone number to a contact name. If the phone number is not in the user's contact
+     * list, this method returns the phone number provided.
+     *
+     * @param context Current activity or application context
+     * @param number Phone number to resolve
+     * @return Contact name or phone number (fallback)
+     */
     public static String resolveName(Context context, String number) {
         Uri lookupUri = Uri.withAppendedPath(
                 ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
@@ -45,6 +65,13 @@ public class Contact {
         return number;
     }
 
+    /**
+     * Translates a contact name to a phone number.
+     *
+     * @param context Current activity or application context
+     * @param name Contact name to resolve
+     * @return Phone number or contact name (fallback)
+     */
     public static String resolveNumber(Context context, String name) {
         Cursor cur = context
                 .getContentResolver()
