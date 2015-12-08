@@ -75,7 +75,7 @@ public class SearchActivity extends ListActivity {
      * @param searchStr The string to be queried for
      * @return Returns a boolean based on whether or not the search is found.
      */
-    private boolean searchMessages(String searchStr){
+    public boolean searchMessages(String searchStr){
 
 
 
@@ -92,6 +92,7 @@ public class SearchActivity extends ListActivity {
         }
         else{
             setListAdapter(null);
+            return false;
         }
 
         return true;
