@@ -83,9 +83,20 @@ public class EditMessageActivity extends Activity {
         }
     }
 
+    /**
+     * This method calls the insertNewContact() function , which allows the user to add a contact to
+     * the stock contact app.
+     *
+     */
     public void onClickAddTo(View V){
         insertNewContact();
     }
+
+    /**
+     * This method takes the number if one has been inputted into id_phone_field and opens
+     * the add contact window of the built in stock app, with the phone number already in phone number input as a mobile
+     * number, which enables the user to be able to add a new number to the stock contact app
+     */
     public void insertNewContact()
     {
         String mobileNumber =(((EditText) findViewById(R.id.id_phone_field)).getText().toString());
@@ -97,19 +108,39 @@ public class EditMessageActivity extends Activity {
         startActivity(intent);
     }
 
+    /**
+     * This method allows the user to cancel, which takes them back to the threadListActivity, when creating a new message.
+     *
+     */
     public void onCancelPressed(View v){
         startActivity(new Intent(cs3354group10.messenger.activities.EditMessageActivity.this, cs3354group10.messenger.activities.ThreadListActivity.class));
     }
 
+
     private static final int CONTACT_PICKER_RESULT = 1001;
 
+    /**
+     * This method opens the view of the contact list of the stock contact app,
+     * which then allows you to choose the contact you are trying to message.
+     * Then gets the results of what the user chose and calls the function onActivityResult,
+     * which handles the results and gets the number of the contact selected.*
+     */
     public void doLaunchContactPicker(View view) {
         Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
                 Contacts.CONTENT_URI);
         startActivityForResult(contactPickerIntent, CONTACT_PICKER_RESULT);
     }
 
-    @Override
+    /**
+     * This method takes the results form the contact chosen, checks if there the actual results , and error did not occur when getting the results.
+     * Then checks what type of action was used to get these results.
+     * If it was CONTACT_PICKER_ACTION, it gets the phone number associated with that contact name from data,
+     * then removes all characters that are not numbers in the contact phone number, and puts it in id_phone_field.
+     *
+     * @param requestCode Is a code used to know what type of action is being done.
+     * @param resultCode Is a code used to know if the results from the Intent were correct results..
+     * @param data Is the data from the contact that was chosen.
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
